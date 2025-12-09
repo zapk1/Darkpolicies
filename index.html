@@ -46,12 +46,34 @@
             100% { transform: rotate(360deg); }
         }
         
-        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 0.5rem; }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+
+
+
+               @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
         
-        .skeleton-text { height: 1rem; margin-bottom: 0.5rem; }
-        .skeleton-image { width: 100%; height: 300px; }
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
         
+        img.loaded {
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+
+
+
+
         .admin-modal-overlay, .auth-modal-overlay, .accounts-modal-overlay, .post-modal-overlay, .lightbox-overlay, .group-modal-overlay, .members-modal-overlay, .ai-modal-overlay, .market-modal-overlay, .promote-modal-overlay, .story-modal-overlay, .audio-modal-overlay, .ad-modal-overlay, .verify-modal-overlay, .reels-modal-overlay {
             position: fixed;
             top: 0;
@@ -3847,18 +3869,218 @@ var hasMoreMusic = true;
 var hasMoreReels = true;
 var hasMoreUsers = true;
 
-function formatCount(num) {
-    if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
-    if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-    return num.toString();
+
+
+
+
+
+
+
+
+
+
+// ===== NEW PROGRESSIVE LOADING SYSTEM =====
+const LOAD_BATCH = 10;
+
+async function startProgressiveLoad() {
+    console.log('📦 Phase 1: Skeletons');
+    showSkeletons();
+    
+    console.log('📊 Phase 2: Load data');
+    await loadAllData();
+    
+    console.log('📝 Phase 3: Show text');
+    renderWithText();
+    
+    console.log('🖼️ Phase 4: Lazy images');
+    setupLazyImages();
 }
 
-function getVerificationBadge(user) {
-    if (!user || !user.verified) return '';
-    const badgeClass = user.verified_type === 'black' ? 'black' : 'blue';
-    return `<span class="verification-badge ${badgeClass}"><svg viewBox="0 0 24 24" fill="white"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>`;
+function showSkeletons() {
+    // Posts skeletons
+    const postsFeed = document.getElementById('postsFeed');
+    if (postsFeed) {
+        postsFeed.innerHTML = Array(10).fill(0).map(() => `
+            <div class="post-card">
+                <div class="skeleton" style="width:100px;height:14px;margin-bottom:1rem;"></div>
+                <div class="skeleton" style="width:80%;height:16px;margin-bottom:0.5rem;"></div>
+                <div class="skeleton" style="height:300px;margin-bottom:1rem;border-radius:8px;"></div>
+                <div style="display:flex;gap:0.75rem;align-items:center;">
+                    <div class="skeleton" style="width:40px;height:40px;border-radius:50%;"></div>
+                    <div style="flex:1;">
+                        <div class="skeleton" style="width:120px;height:14px;margin-bottom:0.25rem;"></div>
+                        <div class="skeleton" style="width:180px;height:12px;"></div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Stories skeletons
+    const storiesContainer = document.getElementById('storiesContainer');
+    if (storiesContainer) {
+        storiesContainer.innerHTML = Array(10).fill(0).map(() => `
+            <div class="story-circle">
+                <div class="skeleton" style="width:70px;height:70px;border-radius:50%;"></div>
+                <div class="skeleton" style="width:50px;height:12px;margin-top:0.5rem;"></div>
+            </div>
+        `).join('');
+    }
+    
+    // Users skeletons
+    const usersList = document.getElementById('usersList');
+    if (usersList) {
+        usersList.innerHTML = Array(10).fill(0).map(() => `
+            <div class="user-card">
+                <div class="skeleton" style="width:44px;height:44px;border-radius:50%;"></div>
+                <div style="flex:1;">
+                    <div class="skeleton" style="width:120px;height:14px;margin-bottom:0.25rem;"></div>
+                    <div class="skeleton" style="width:180px;height:12px;"></div>
+                </div>
+            </div>
+        `).join('');
+    }
 }
+
+async function loadAllData() {
+    try {
+        // Load 10 posts
+        const postsQuery = query(
+            collection(db, 'posts'),
+            orderBy('created_date', 'desc'),
+            limit(LOAD_BATCH)
+        );
+        const postsSnap = await getDocs(postsQuery);
+        posts = postsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        // Load 10 stories
+        const storiesQuery = query(
+            collection(db, 'posts'),
+            where('is_story', '==', true),
+            orderBy('created_date', 'desc'),
+            limit(LOAD_BATCH)
+        );
+        const storiesSnap = await getDocs(storiesQuery);
+        stories = storiesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        // Load 10 users
+        const usersQuery = query(
+            collection(db, 'users'),
+            orderBy('created_date', 'desc'),
+            limit(LOAD_BATCH)
+        );
+        const usersSnap = await getDocs(usersQuery);
+        users = usersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        console.log(`✅ Loaded: ${posts.length} posts, ${stories.length} stories, ${users.length} users`);
+    } catch (e) {
+        console.error('Load error:', e);
+    }
+}
+
+function renderWithText() {
+    // Render posts with text only (no images yet)
+    const postsFeed = document.getElementById('postsFeed');
+    if (postsFeed && posts.length > 0) {
+        postsFeed.innerHTML = posts.map(post => {
+            const user = users.find(u => u.email === post.created_by) || {
+                full_name: 'User',
+                profile_picture: '',
+                email: post.created_by
+            };
+            
+            return `
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-date">${new Date(post.created_date).toLocaleDateString()}</div>
+                        <div class="post-views">👁️ ${formatCount(post.views_count || 0)}</div>
+                    </div>
+                    <div class="post-content">
+                        ${post.caption ? `<p class="post-caption">${post.caption}</p>` : ''}
+                        ${post.content_urls?.[0] ? `<div class="skeleton" style="height:300px;border-radius:8px;" data-img="${post.content_urls[0]}"></div>` : ''}
+                    </div>
+                    <div class="post-user">
+                        <div class="skeleton" style="width:40px;height:40px;border-radius:50%;" data-img="${user.profile_picture}"></div>
+                        <div class="user-info">
+                            <div class="user-name">${user.full_name}</div>
+                            <div class="user-email">${user.email}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // Render stories with text only
+    const storiesContainer = document.getElementById('storiesContainer');
+    if (storiesContainer && stories.length > 0) {
+        storiesContainer.innerHTML = `
+            <div class="story-circle add" onclick="openStoryModal()">
+                <div class="story-circle-img">+</div>
+                <div class="story-circle-name">Add Story</div>
+            </div>
+        ` + stories.map(story => {
+            const user = users.find(u => u.email === story.created_by) || { full_name: 'User', profile_picture: '' };
+            return `
+                <div class="story-circle">
+                    <div class="skeleton story-circle-img" data-img="${story.content_url || user.profile_picture}"></div>
+                    <div class="story-circle-name">${user.full_name.split(' ')[0]}</div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // Render users with text only
+    const usersList = document.getElementById('usersList');
+    if (usersList && users.length > 0) {
+        usersList.innerHTML = users.filter(u => u.email !== currentUser?.email).map(user => `
+            <div class="user-card" onclick="viewProfile('${user.email}')">
+                <div class="skeleton user-card-avatar" data-img="${user.profile_picture}"></div>
+                <div class="user-card-info">
+                    <div class="user-card-name">${user.full_name}</div>
+                    <div class="user-card-email">${user.email}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+function setupLazyImages() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const imgUrl = el.getAttribute('data-img');
+                if (imgUrl) {
+                    const img = new Image();
+                    img.onload = () => {
+                        if (el.classList.contains('story-circle-img')) {
+                            el.style.backgroundImage = `url(${imgUrl})`;
+                            el.classList.remove('skeleton');
+                        } else {
+                            const newImg = document.createElement('img');
+                            newImg.src = imgUrl;
+                            newImg.className = el.className.replace('skeleton', '');
+                            newImg.classList.add('loaded');
+                            el.replaceWith(newImg);
+                        }
+                    };
+                    img.src = imgUrl;
+                    observer.unobserve(el);
+                }
+            }
+        });
+    }, { rootMargin: '200px' });
+    
+    document.querySelectorAll('[data-img]').forEach(el => observer.observe(el));
+}
+
+
+
+
+
+
+
 
 function generateResetCode() {
     return 'r' + Math.floor(10000 + Math.random() * 90000);
@@ -3883,6 +4105,19 @@ function saveAccountToList(account) {
     localStorage.setItem('streamx-saved-accounts', JSON.stringify(savedAccounts));
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 onAuthStateChanged(authInstance, async (firebaseUser) => {
     if (firebaseUser) {
         const q = query(collection(db, 'users'), where('email', '==', firebaseUser.email), limit(1));
@@ -3894,7 +4129,7 @@ onAuthStateChanged(authInstance, async (firebaseUser) => {
             hideAuthModal();
             updateHeaderUI();
             updateNavButtons();
-            startLazyLoading();
+            startProgressiveLoad();
         }
     } else {
         currentUser = null;
@@ -3902,6 +4137,20 @@ onAuthStateChanged(authInstance, async (firebaseUser) => {
         showAuthModal();
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 window.addEventListener('load', function() {
     console.log('✅ App loaded');
@@ -3943,39 +4192,30 @@ window.addEventListener('scroll', function() {
     }
 });
 
-async function startLazyLoading() {
-    posts = [];
-    stories = [];
-    musicPosts = [];
-    reels = [];
-    users = [];
-    ads = [];
-    conversations = [];
-    
-    lastVisiblePost = null;
-    lastVisibleStory = null;
-    lastVisibleMusic = null;
-    lastVisibleReel = null;
-    lastVisibleUser = null;
-    
-    hasMorePosts = true;
-    hasMoreStories = true;
-    hasMoreMusic = true;
-    hasMoreReels = true;
-    hasMoreUsers = true;
-    
-    console.log('🚀 Starting lazy load...');
-    
-    for (let i = 0; i < 3; i++) await loadOneStory();
-    for (let i = 0; i < 5; i++) await loadOnePost();
-    for (let i = 0; i < 3; i++) await loadOneMusic();
-    for (let i = 0; i < 10; i++) await loadOneUser();
-    
-    loadAds();
-    loadConversations();
-    
-    dataLoaded = true;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 async function loadOneStory() {
     if (loadingStories || !hasMoreStories) return;
@@ -4579,7 +4819,7 @@ window.switchToAccount = async function(email) {
             
             document.getElementById('accountsModal').classList.remove('active');
             updateHeaderUI();
-            startLazyLoading();
+            startProgressiveLoad();
             navigateTo('feed');
             showToast(`Switched to ${currentUser.full_name}!`);
         }
@@ -7208,11 +7448,7 @@ window.deleteAd = async function(adId) {
 
 
 
-    function formatCount(num) {
-        if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-        if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-        return num.toString();
-    }
+  
 
     function getVerificationBadge(user) {
         if (!user || !user.verified) return '';
