@@ -14,7 +14,7 @@
     <title>StreamX</title>
 
 
-     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
@@ -46,34 +46,12 @@
             100% { transform: rotate(360deg); }
         }
         
-
-
-
-
-               @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 0.5rem; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
         
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
+        .skeleton-text { height: 1rem; margin-bottom: 0.5rem; }
+        .skeleton-image { width: 100%; height: 300px; }
         
-        img.loaded {
-            animation: fadeIn 0.3s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-
-
-
-
         .admin-modal-overlay, .auth-modal-overlay, .accounts-modal-overlay, .post-modal-overlay, .lightbox-overlay, .group-modal-overlay, .members-modal-overlay, .ai-modal-overlay, .market-modal-overlay, .promote-modal-overlay, .story-modal-overlay, .audio-modal-overlay, .ad-modal-overlay, .verify-modal-overlay, .reels-modal-overlay {
             position: fixed;
             top: 0;
@@ -3778,9 +3756,8 @@
 
 
 <script type="module">
-// Import Firebase v10 (modular)
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, onSnapshot, where, limit, startAfter, arrayUnion, arrayRemove } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, onSnapshot, where, limit, startAfter, arrayUnion, arrayRemove, increment } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
 import { getAuth, setPersistence, browserLocalPersistence, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 
@@ -3790,26 +3767,14 @@ const firebaseConfig = {
     projectId: "streamx-a4099",
     storageBucket: "streamx-a4099.firebasestorage.app",
     messagingSenderId: "1073155867607",
-    appId: "1:1073155867607:web:f4e0496523d360626a0192"
+    appId: "1:1073155867607:web:f4e0496523d360626a0192",
+    measurementId: "G-7DX6HDZ3S6"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 const authInstance = getAuth(app);
-
-// Set persistence
-setPersistence(authInstance, browserLocalPersistence).then(() => {
-    console.log('✅ Firebase ready!');
-}).catch((error) => {
-    console.error('❌ Firebase error:', error);
-});
-
-
-
-
-
 
 await setPersistence(authInstance, browserLocalPersistence);
 
@@ -3882,218 +3847,18 @@ var hasMoreMusic = true;
 var hasMoreReels = true;
 var hasMoreUsers = true;
 
-
-
-
-
-
-
-
-
-
-
-// ===== NEW PROGRESSIVE LOADING SYSTEM =====
-const LOAD_BATCH = 10;
-
-async function startProgressiveLoad() {
-    console.log('📦 Phase 1: Skeletons');
-    showSkeletons();
-    
-    console.log('📊 Phase 2: Load data');
-    await loadAllData();
-    
-    console.log('📝 Phase 3: Show text');
-    renderWithText();
-    
-    console.log('🖼️ Phase 4: Lazy images');
-    setupLazyImages();
+function formatCount(num) {
+    if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
+    if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    return num.toString();
 }
 
-function showSkeletons() {
-    // Posts skeletons
-    const postsFeed = document.getElementById('postsFeed');
-    if (postsFeed) {
-        postsFeed.innerHTML = Array(10).fill(0).map(() => `
-            <div class="post-card">
-                <div class="skeleton" style="width:100px;height:14px;margin-bottom:1rem;"></div>
-                <div class="skeleton" style="width:80%;height:16px;margin-bottom:0.5rem;"></div>
-                <div class="skeleton" style="height:300px;margin-bottom:1rem;border-radius:8px;"></div>
-                <div style="display:flex;gap:0.75rem;align-items:center;">
-                    <div class="skeleton" style="width:40px;height:40px;border-radius:50%;"></div>
-                    <div style="flex:1;">
-                        <div class="skeleton" style="width:120px;height:14px;margin-bottom:0.25rem;"></div>
-                        <div class="skeleton" style="width:180px;height:12px;"></div>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-    
-    // Stories skeletons
-    const storiesContainer = document.getElementById('storiesContainer');
-    if (storiesContainer) {
-        storiesContainer.innerHTML = Array(10).fill(0).map(() => `
-            <div class="story-circle">
-                <div class="skeleton" style="width:70px;height:70px;border-radius:50%;"></div>
-                <div class="skeleton" style="width:50px;height:12px;margin-top:0.5rem;"></div>
-            </div>
-        `).join('');
-    }
-    
-    // Users skeletons
-    const usersList = document.getElementById('usersList');
-    if (usersList) {
-        usersList.innerHTML = Array(10).fill(0).map(() => `
-            <div class="user-card">
-                <div class="skeleton" style="width:44px;height:44px;border-radius:50%;"></div>
-                <div style="flex:1;">
-                    <div class="skeleton" style="width:120px;height:14px;margin-bottom:0.25rem;"></div>
-                    <div class="skeleton" style="width:180px;height:12px;"></div>
-                </div>
-            </div>
-        `).join('');
-    }
+function getVerificationBadge(user) {
+    if (!user || !user.verified) return '';
+    const badgeClass = user.verified_type === 'black' ? 'black' : 'blue';
+    return `<span class="verification-badge ${badgeClass}"><svg viewBox="0 0 24 24" fill="white"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>`;
 }
-
-async function loadAllData() {
-    try {
-        // Load 10 posts
-        const postsQuery = query(
-            collection(db, 'posts'),
-            orderBy('created_date', 'desc'),
-            limit(LOAD_BATCH)
-        );
-        const postsSnap = await getDocs(postsQuery);
-        posts = postsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        // Load 10 stories
-        const storiesQuery = query(
-            collection(db, 'posts'),
-            where('is_story', '==', true),
-            orderBy('created_date', 'desc'),
-            limit(LOAD_BATCH)
-        );
-        const storiesSnap = await getDocs(storiesQuery);
-        stories = storiesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        // Load 10 users
-        const usersQuery = query(
-            collection(db, 'users'),
-            orderBy('created_date', 'desc'),
-            limit(LOAD_BATCH)
-        );
-        const usersSnap = await getDocs(usersQuery);
-        users = usersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        console.log(`✅ Loaded: ${posts.length} posts, ${stories.length} stories, ${users.length} users`);
-    } catch (e) {
-        console.error('Load error:', e);
-    }
-}
-
-function renderWithText() {
-    // Render posts with text only (no images yet)
-    const postsFeed = document.getElementById('postsFeed');
-    if (postsFeed && posts.length > 0) {
-        postsFeed.innerHTML = posts.map(post => {
-            const user = users.find(u => u.email === post.created_by) || {
-                full_name: 'User',
-                profile_picture: '',
-                email: post.created_by
-            };
-            
-            return `
-                <div class="post-card">
-                    <div class="post-header">
-                        <div class="post-date">${new Date(post.created_date).toLocaleDateString()}</div>
-                        <div class="post-views">👁️ ${formatCount(post.views_count || 0)}</div>
-                    </div>
-                    <div class="post-content">
-                        ${post.caption ? `<p class="post-caption">${post.caption}</p>` : ''}
-                        ${post.content_urls?.[0] ? `<div class="skeleton" style="height:300px;border-radius:8px;" data-img="${post.content_urls[0]}"></div>` : ''}
-                    </div>
-                    <div class="post-user">
-                        <div class="skeleton" style="width:40px;height:40px;border-radius:50%;" data-img="${user.profile_picture}"></div>
-                        <div class="user-info">
-                            <div class="user-name">${user.full_name}</div>
-                            <div class="user-email">${user.email}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-    
-    // Render stories with text only
-    const storiesContainer = document.getElementById('storiesContainer');
-    if (storiesContainer && stories.length > 0) {
-        storiesContainer.innerHTML = `
-            <div class="story-circle add" onclick="openStoryModal()">
-                <div class="story-circle-img">+</div>
-                <div class="story-circle-name">Add Story</div>
-            </div>
-        ` + stories.map(story => {
-            const user = users.find(u => u.email === story.created_by) || { full_name: 'User', profile_picture: '' };
-            return `
-                <div class="story-circle">
-                    <div class="skeleton story-circle-img" data-img="${story.content_url || user.profile_picture}"></div>
-                    <div class="story-circle-name">${user.full_name.split(' ')[0]}</div>
-                </div>
-            `;
-        }).join('');
-    }
-    
-    // Render users with text only
-    const usersList = document.getElementById('usersList');
-    if (usersList && users.length > 0) {
-        usersList.innerHTML = users.filter(u => u.email !== currentUser?.email).map(user => `
-            <div class="user-card" onclick="viewProfile('${user.email}')">
-                <div class="skeleton user-card-avatar" data-img="${user.profile_picture}"></div>
-                <div class="user-card-info">
-                    <div class="user-card-name">${user.full_name}</div>
-                    <div class="user-card-email">${user.email}</div>
-                </div>
-            </div>
-        `).join('');
-    }
-}
-
-function setupLazyImages() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const el = entry.target;
-                const imgUrl = el.getAttribute('data-img');
-                if (imgUrl) {
-                    const img = new Image();
-                    img.onload = () => {
-                        if (el.classList.contains('story-circle-img')) {
-                            el.style.backgroundImage = `url(${imgUrl})`;
-                            el.classList.remove('skeleton');
-                        } else {
-                            const newImg = document.createElement('img');
-                            newImg.src = imgUrl;
-                            newImg.className = el.className.replace('skeleton', '');
-                            newImg.classList.add('loaded');
-                            el.replaceWith(newImg);
-                        }
-                    };
-                    img.src = imgUrl;
-                    observer.unobserve(el);
-                }
-            }
-        });
-    }, { rootMargin: '200px' });
-    
-    document.querySelectorAll('[data-img]').forEach(el => observer.observe(el));
-}
-
-
-
-
-
-
-
 
 function generateResetCode() {
     return 'r' + Math.floor(10000 + Math.random() * 90000);
@@ -4122,7 +3887,12 @@ function saveAccountToList(account) {
 
 
 
-
+async function uploadToStorage(file, path) {
+    const storageReference = firebase.storage().ref(path);
+    const snapshot = await storageReference.put(file);
+    const downloadURL = await snapshot.ref.getDownloadURL();
+    return downloadURL;
+}
 
 
 
@@ -4142,7 +3912,7 @@ onAuthStateChanged(authInstance, async (firebaseUser) => {
             hideAuthModal();
             updateHeaderUI();
             updateNavButtons();
-            startProgressiveLoad();
+            startLazyLoading();
         }
     } else {
         currentUser = null;
@@ -4150,20 +3920,6 @@ onAuthStateChanged(authInstance, async (firebaseUser) => {
         showAuthModal();
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 window.addEventListener('load', function() {
     console.log('✅ App loaded');
@@ -4205,30 +3961,42 @@ window.addEventListener('scroll', function() {
     }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+async function startLazyLoading() {
+    posts = [];
+    stories = [];
+    musicPosts = [];
+    reels = [];
+    users = [];
+    ads = [];
+    conversations = [];
+    
+    lastVisiblePost = null;
+    lastVisibleStory = null;
+    lastVisibleMusic = null;
+    lastVisibleReel = null;
+    lastVisibleUser = null;
+    
+    hasMorePosts = true;
+    hasMoreStories = true;
+    hasMoreMusic = true;
+    hasMoreReels = true;
+    hasMoreUsers = true;
+    
+    console.log('🚀 STEP 1: Loading skeleton boxes...');
+    showSkeletons(10);
+    
+    console.log('📝 STEP 2: Loading data...');
+    for (let i = 0; i < 3; i++) await loadOneStory();
+    for (let i = 0; i < 10; i++) await loadOnePost();
+    for (let i = 0; i < 3; i++) await loadOneMusic();
+    for (let i = 0; i < 10; i++) await loadOneUser();
+    
+    loadAds();
+    loadConversations();
+    
+    console.log('✅ All loaded!');
+    dataLoaded = true;
+}
 
 async function loadOneStory() {
     if (loadingStories || !hasMoreStories) return;
@@ -4269,6 +4037,10 @@ async function loadOnePost() {
     try {
         let q = query(
             collection(db, 'posts'),
+            where('is_music', '==', false),
+            where('is_ad', '==', false),
+            where('is_story', '==', false),
+            where('is_reel', '==', false),
             orderBy('created_date', 'desc'),
             limit(LAZY_LOAD_BATCH)
         );
@@ -4832,7 +4604,7 @@ window.switchToAccount = async function(email) {
             
             document.getElementById('accountsModal').classList.remove('active');
             updateHeaderUI();
-            startProgressiveLoad();
+            startLazyLoading();
             navigateTo('feed');
             showToast(`Switched to ${currentUser.full_name}!`);
         }
@@ -6169,6 +5941,40 @@ function linkify(text) {
     });
 }
 
+function showSkeletons(count) {
+    const container = document.getElementById('postsFeed');
+    if (!container) return;
+    
+    let html = '';
+    for (let i = 0; i < count; i++) {
+        html += `
+            <div class="post-skeleton">
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.75rem;">
+                    <div class="skeleton skeleton-line" style="width:120px;"></div>
+                    <div class="skeleton skeleton-line" style="width:100px;"></div>
+                </div>
+                <div class="skeleton skeleton-line" style="width:100%;"></div>
+                <div class="skeleton skeleton-line" style="width:85%;"></div>
+                <div class="skeleton skeleton-image"></div>
+                <div style="display:flex;gap:0.75rem;align-items:center;padding-top:0.75rem;">
+                    <div class="skeleton skeleton-avatar"></div>
+                    <div style="flex:1;">
+                        <div class="skeleton skeleton-line" style="width:150px;margin-bottom:0.25rem;"></div>
+                        <div class="skeleton skeleton-line" style="width:200px;"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    container.innerHTML = html;
+}
+
+
+
+
+
+
+
 function renderPosts() {
     let filtered = posts;
     
@@ -6206,7 +6012,22 @@ function renderPosts() {
     }
     
     container.innerHTML = allContent.map(post => post.is_ad ? createAdHTML(post) : createPostHTML(post)).join('');
+    
+    setTimeout(() => {
+        const images = container.querySelectorAll('img[loading="lazy"]');
+        images.forEach(img => {
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.3s';
+            img.onload = () => { img.style.opacity = '1'; };
+        });
+    }, 100);
 }
+
+
+
+
+
+
 
 function createAdHTML(ad) {
     const urls = ad.content_urls || [];
@@ -6574,6 +6395,10 @@ window.removeHashtag = function(tag) {
     renderHashtags();
 };
 
+
+
+
+
 async function handleCreatePost(e) {
     e.preventDefault();
     
@@ -6585,26 +6410,42 @@ async function handleCreatePost(e) {
         return;
     }
     
-    document.getElementById('submitText').style.display = 'none';
-    document.getElementById('submitLoading').style.display = 'inline-block';
-    document.getElementById('createPostBtn').disabled = true;
+    const submitBtn = document.getElementById('createPostBtn');
+    const submitText = document.getElementById('submitText');
+    const submitLoading = document.getElementById('submitLoading');
+    
+    submitText.style.display = 'none';
+    submitLoading.style.display = 'inline-block';
+    submitBtn.disabled = true;
     
     try {
         showToast('Creating post...', 'success');
         
-        const hasVideo = uploadedFiles.some(f => f.type.startsWith('video/'));
-        const contentType = hasVideo ? 'video' : 'image';
         const contentUrls = [];
+        const hasVideo = uploadedFiles.some(f => f.type.startsWith('video/'));
         
+        // Upload files ONE BY ONE
         for (let i = 0; i < uploadedFiles.length; i++) {
             const file = uploadedFiles[i];
+            console.log(`Uploading file ${i + 1}/${uploadedFiles.length}...`);
+            
             if (file.type.startsWith('video/')) {
-                contentUrls.push(await uploadToStorage(file, `videos/${Date.now()}_${file.name}`));
+                const videoUrl = await uploadToStorage(file, `videos/${Date.now()}_${i}_${file.name}`);
+                contentUrls.push(videoUrl);
             } else {
-                contentUrls.push(await compressImage(file, 1200, 0.85));
+                const imageUrl = await compressImage(file, 1200, 0.85);
+                contentUrls.push(imageUrl);
             }
         }
         
+        console.log('✅ All files uploaded:', contentUrls);
+
+
+
+
+
+
+
         const initialViews = Math.floor(Math.random() * 241145) + 2399;
         const initialLikes = Math.floor(initialViews * 0.2);
         
@@ -6710,7 +6551,30 @@ window.viewProfile = function(email) {
     }
 };
 
+
+
+
+
+
 function renderProfile(user) {
+    // Show skeleton first
+    const postsContainer = document.getElementById('profilePosts');
+    if (postsContainer) {
+        postsContainer.innerHTML = `
+            <div class="post-skeleton">
+                <div class="skeleton skeleton-image"></div>
+            </div>
+            <div class="post-skeleton">
+                <div class="skeleton skeleton-image"></div>
+            </div>
+        `;
+    }
+
+
+
+
+
+    
     const verifyBadge = getVerificationBadge(user);
     document.getElementById('profileAvatar').src = user.profile_picture || '';
     document.getElementById('profileName').textContent = user.full_name;
@@ -6758,13 +6622,6 @@ function renderProfile(user) {
     document.getElementById('profileViewCount').textContent = formatCount(totalViews);
     document.getElementById('profileLikeCount').textContent = formatCount(totalLikes);
     
-    const postsContainer = document.getElementById('profilePosts');
-    if (userPosts.length === 0) {
-        postsContainer.innerHTML = `<div class="empty-state"><h3>No posts</h3></div>`;
-    } else {
-        postsContainer.innerHTML = userPosts.map(post => createPostHTML(post)).join('');
-    }
-}
 
 async function handleProfilePictureUpload(e) {
     const file = e.target.files[0];
@@ -7449,527 +7306,6 @@ window.deleteAd = async function(adId) {
         showToast('Error', 'error');
     }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-    function getVerificationBadge(user) {
-        if (!user || !user.verified) return '';
-        const type = user.verified_type === 'black' ? 'black' : 'blue';
-        return `<span class="verification-badge ${type}"><svg viewBox="0 0 22 22"><path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z"/></svg></span>`;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // AUTH
-    onAuthStateChanged(authInstance, async (firebaseUser) => {
-        if (firebaseUser) {
-            const q = query(collection(db, 'users'), where('email', '==', firebaseUser.email), limit(1));
-            const snapshot = await getDocs(q);
-            
-            if (!snapshot.empty) {
-                currentUser = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
-                console.log('✅ User:', currentUser.email);
-                updateHeaderUI();
-                startProgressiveLoad();
-            } else {
-                const newUser = {
-                    email: firebaseUser.email,
-                    full_name: firebaseUser.displayName || 'User',
-                    profile_picture: firebaseUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(firebaseUser.displayName || 'User')}&size=200&background=000000&color=ffffff`,
-                    verified: false,
-                    verified_type: ''
-                };
-                const docRef = await addDoc(collection(db, 'users'), newUser);
-                currentUser = { id: docRef.id, ...newUser };
-                updateHeaderUI();
-                startProgressiveLoad();
-            }
-        } else {
-            showAuthModal();
-        }
-    });
-
-    function showAuthModal() {
-        const modal = document.createElement('div');
-        modal.className = 'auth-modal';
-        modal.innerHTML = `
-            <div class="auth-modal-content">
-                <h2 class="auth-modal-title">Welcome to StreamX</h2>
-                <input type="email" id="authEmail" class="auth-input" placeholder="Email">
-                <input type="password" id="authPassword" class="auth-input" placeholder="Password">
-                <button class="btn btn-primary btn-block" onclick="handleLogin()">Login / Sign Up</button>
-            </div>
-        `;
-        document.body.appendChild(modal);
-    }
-
-    window.handleLogin = async function() {
-        const email = document.getElementById('authEmail').value.trim();
-        const password = document.getElementById('authPassword').value;
-        
-        if (!email || !password) {
-            showToast('Enter email and password');
-            return;
-        }
-        
-        try {
-            try {
-                await signInWithEmailAndPassword(authInstance, email, password);
-            } catch (error) {
-                if (error.code === 'auth/user-not-found') {
-                    await createUserWithEmailAndPassword(authInstance, email, password);
-                    showToast('✅ Account created!');
-                } else {
-                    throw error;
-                }
-            }
-            document.querySelector('.auth-modal')?.remove();
-        } catch (error) {
-            showToast('❌ ' + error.message);
-        }
-    };
-
-    function updateHeaderUI() {
-        const icon = document.getElementById('headerProfileIcon');
-        if (currentUser?.profile_picture) {
-            icon.src = currentUser.profile_picture;
-            icon.style.display = 'block';
-            icon.onclick = () => navigateTo('profile');
-        }
-    }
-
-    // PROGRESSIVE LOADING
-    async function startProgressiveLoad() {
-        posts = [];
-        lastVisible = null;
-        hasMore = true;
-        
-        console.log('🚀 Step 1: Loading structures...');
-        await loadStructures();
-        
-        console.log('📝 Step 2: Loading text...');
-        await loadText();
-        
-        console.log('🖼️ Step 3: Loading images...');
-        await loadImages();
-    }
-
-    async function loadStructures() {
-        const container = document.getElementById('postsFeed');
-        if (!container) return;
-        
-        let skeletons = '';
-        for (let i = 0; i < BATCH_SIZE; i++) {
-            skeletons += `
-                <div class="post-skeleton">
-                    <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
-                        <div class="skeleton skeleton-line" style="width:120px;"></div>
-                        <div class="skeleton skeleton-line" style="width:80px;"></div>
-                    </div>
-                    <div class="skeleton skeleton-line" style="width:100%;"></div>
-                    <div class="skeleton skeleton-line" style="width:90%;"></div>
-                    <div class="skeleton skeleton-image"></div>
-                    <div style="display:flex;gap:0.75rem;align-items:center;margin-top:1rem;">
-                        <div class="skeleton skeleton-avatar"></div>
-                        <div style="flex:1;">
-                            <div class="skeleton skeleton-line" style="width:150px;margin-bottom:0.25rem;"></div>
-                            <div class="skeleton skeleton-line" style="width:200px;"></div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        container.innerHTML = skeletons;
-        
-        try {
-            let q = query(collection(db, 'posts'), orderBy('created_date', 'desc'), limit(BATCH_SIZE));
-            const snapshot = await getDocs(q);
-            
-            if (snapshot.empty) {
-                hasMore = false;
-                container.innerHTML = '<div class="empty-state"><h2>No posts yet</h2><p>Be the first to post!</p></div>';
-                return;
-            }
-            
-            posts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            lastVisible = snapshot.docs[snapshot.docs.length - 1];
-            
-            const emails = [...new Set(posts.map(p => p.created_by))];
-            const usersSnapshot = await getDocs(query(collection(db, 'users')));
-            users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        } catch (e) {
-            console.error('Load error:', e);
-        }
-    }
-
-    async function loadText() {
-        const container = document.getElementById('postsFeed');
-        if (!container) return;
-        
-        container.innerHTML = posts.map(post => {
-            const user = users.find(u => u.email === post.created_by) || { 
-                full_name: 'User', 
-                profile_picture: '',
-                email: post.created_by,
-                verified: false 
-            };
-            const verifyBadge = getVerificationBadge(user);
-            
-            return `
-                <div class="post-card" data-post-id="${post.id}">
-                    <div class="post-header">
-                        <div class="post-date-location">${new Date(post.created_date).toLocaleDateString()}</div>
-                        <div class="post-views">
-                            <svg viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                            <span>${formatCount(post.views_count || 0)} views</span>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        ${post.caption ? `<p class="post-caption">${post.caption}</p>` : ''}
-                        ${(post.content_urls && post.content_urls.length > 0) ? '<div class="skeleton skeleton-image"></div>' : ''}
-                    </div>
-                    <div class="post-user">
-                        <div class="skeleton skeleton-avatar"></div>
-                        <div class="user-info">
-                            <div class="user-name">${user.full_name}${verifyBadge}</div>
-                            <div class="user-email">${user.email}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    async function loadImages() {
-        for (let i = 0; i < posts.length; i++) {
-            await new Promise(resolve => setTimeout(resolve, 100));
-            
-            const post = posts[i];
-            const card = document.querySelector(`[data-post-id="${post.id}"]`);
-            if (!card) continue;
-            
-            const user = users.find(u => u.email === post.created_by) || { 
-                full_name: 'User', 
-                profile_picture: '',
-                verified: false 
-            };
-            
-            if (post.content_urls && post.content_urls.length > 0) {
-                const imageSkeleton = card.querySelector('.skeleton-image');
-                if (imageSkeleton) {
-                    const img = document.createElement('img');
-                    img.src = post.content_urls[0];
-                    img.className = 'post-image';
-                    img.onload = () => img.classList.add('loaded');
-                    imageSkeleton.replaceWith(img);
-                }
-            }
-            
-            const avatarSkeleton = card.querySelector('.skeleton-avatar');
-            if (avatarSkeleton && user.profile_picture) {
-                const avatar = document.createElement('img');
-                avatar.src = user.profile_picture;
-                avatar.className = 'user-avatar';
-                avatar.onerror = () => {
-                    avatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name)}&size=64&background=6b7280&color=ffffff`;
-                };
-                avatarSkeleton.replaceWith(avatar);
-            }
-        }
-        
-        console.log('✅ All loaded!');
-    }
-
-    // NAVIGATION
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            navigateTo(btn.getAttribute('data-page'));
-        });
-    });
-
-    function navigateTo(page) {
-        currentPage = page;
-        
-        document.getElementById('feedPage')?.classList.add('hidden');
-        document.getElementById('createPage')?.classList.add('hidden');
-        document.getElementById('profilePage')?.classList.add('hidden');
-        document.getElementById('adminPanel')?.classList.add('hidden');
-        
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.getAttribute('data-page') === page) {
-                btn.classList.add('active');
-            }
-        });
-        
-        if (page === 'feed') {
-            document.getElementById('feedPage')?.classList.remove('hidden');
-        } else if (page === 'create') {
-            document.getElementById('createPage')?.classList.remove('hidden');
-        } else if (page === 'profile') {
-            document.getElementById('profilePage')?.classList.remove('hidden');
-            renderProfile();
-        } else if (page === 'admin') {
-            document.getElementById('adminPanel')?.classList.remove('hidden');
-            renderAdminPanel();
-        }
-    }
-
-    window.navigateTo = navigateTo;
-
-    // CREATE POST
-    const fileInput = document.getElementById('fileInput');
-    const fileUploadArea = document.getElementById('fileUploadArea');
-    const previewContainer = document.getElementById('previewContainer');
-    const createPostBtn = document.getElementById('createPostBtn');
-    
-    fileUploadArea.addEventListener('click', () => fileInput.click());
-    
-    fileInput.addEventListener('change', (e) => {
-        uploadedFiles = Array.from(e.target.files);
-        renderPreviews();
-    });
-    
-    function renderPreviews() {
-        if (uploadedFiles.length === 0) {
-            previewContainer.classList.add('hidden');
-            return;
-        }
-        
-        previewContainer.classList.remove('hidden');
-        previewContainer.innerHTML = uploadedFiles.map((file, index) => {
-            const url = URL.createObjectURL(file);
-            return `<img class="preview-image" src="${url}" alt="Preview ${index + 1}">`;
-        }).join('');
-    }
-    
-    document.getElementById('createHashtag').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            const tag = document.getElementById('createHashtag').value.trim().replace('#', '');
-            if (tag && !currentHashtags.includes(tag)) {
-                currentHashtags.push(tag);
-                renderHashtags();
-                document.getElementById('createHashtag').value = '';
-            }
-        }
-    });
-    
-    function renderHashtags() {
-        document.getElementById('hashtagsList').innerHTML = currentHashtags.map(tag => 
-            `<span style="background:#f3f4f6;padding:0.5rem 0.875rem;border-radius:9999px;font-size:0.875rem;">#${tag}</span>`
-        ).join('');
-    }
-    
-    createPostBtn.addEventListener('click', async () => {
-        const caption = document.getElementById('createCaption').value.trim();
-        const location = document.getElementById('createLocation').value.trim();
-        
-        if (!caption && uploadedFiles.length === 0) {
-            showToast('Add caption or media!');
-            return;
-        }
-        
-        try {
-            showToast('Creating post...');
-            
-            const contentUrls = [];
-            
-            for (const file of uploadedFiles) {
-                const reader = new FileReader();
-                const dataUrl = await new Promise((resolve) => {
-                    reader.onload = (e) => resolve(e.target.result);
-                    reader.readAsDataURL(file);
-                });
-                contentUrls.push(dataUrl);
-            }
-            
-            const initialViews = Math.floor(Math.random() * 30000) + 20000;
-            
-            await addDoc(collection(db, 'posts'), {
-                caption,
-                location,
-                hashtags: currentHashtags,
-                content_urls: contentUrls,
-                content_type: uploadedFiles[0]?.type.startsWith('video/') ? 'video' : 'image',
-                views_count: initialViews,
-                created_date: new Date().toISOString(),
-                created_by: currentUser.email
-            });
-            
-            document.getElementById('createCaption').value = '';
-            document.getElementById('createLocation').value = '';
-            uploadedFiles = [];
-            currentHashtags = [];
-            renderPreviews();
-            renderHashtags();
-            
-            showToast('✅ Posted!');
-            navigateTo('feed');
-            await startProgressiveLoad();
-        } catch (error) {
-            showToast('❌ Error posting');
-            console.error(error);
-        }
-    });
-
-    // PROFILE
-    function renderProfile() {
-        document.getElementById('profileAvatar').src = currentUser.profile_picture;
-        document.getElementById('profileName').textContent = currentUser.full_name;
-        document.getElementById('profileEmail').textContent = currentUser.email;
-        
-        const userPosts = posts.filter(p => p.created_by === currentUser.email);
-        document.getElementById('profilePostCount').textContent = userPosts.length;
-        document.getElementById('profileViewCount').textContent = userPosts.reduce((sum, p) => sum + (p.views_count || 0), 0).toLocaleString();
-        
-        const profilePostsContainer = document.getElementById('profilePosts');
-        if (userPosts.length === 0) {
-            profilePostsContainer.innerHTML = '<div class="empty-state"><h2>No posts yet</h2></div>';
-        } else {
-            profilePostsContainer.innerHTML = userPosts.map(post => createPostHTML(post)).join('');
-        }
-    }
-
-    function createPostHTML(post) {
-        const user = users.find(u => u.email === post.created_by) || { full_name: 'User', profile_picture: '', verified: false };
-        const verifyBadge = getVerificationBadge(user);
-        
-        return `
-            <div class="post-card">
-                <div class="post-header">
-                    <div>${new Date(post.created_date).toLocaleDateString()}</div>
-                    <div class="post-views">
-                        <svg viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                        <span>${formatCount(post.views_count || 0)} views</span>
-                    </div>
-                </div>
-                <div class="post-content">
-                    ${post.caption ? `<p class="post-caption">${post.caption}</p>` : ''}
-                    ${post.content_urls && post.content_urls[0] ? `<img src="${post.content_urls[0]}" class="post-image loaded">` : ''}
-                </div>
-                <div class="post-user">
-                    <img src="${user.profile_picture}" class="user-avatar">
-                    <div class="user-info">
-                        <div class="user-name">${user.full_name}${verifyBadge}</div>
-                        <div class="user-email">${user.email}</div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    document.getElementById('saveProfileBtn').addEventListener('click', async () => {
-        const file = document.getElementById('profilePictureFile').files[0];
-        if (!file) {
-            showToast('Select a file first');
-            return;
-        }
-        
-        try {
-            const reader = new FileReader();
-            const dataUrl = await new Promise((resolve) => {
-                reader.onload = (e) => resolve(e.target.result);
-                reader.readAsDataURL(file);
-            });
-            
-            await updateDoc(doc(db, 'users', currentUser.id), { profile_picture: dataUrl });
-            currentUser.profile_picture = dataUrl;
-            
-            updateHeaderUI();
-            renderProfile();
-            showToast('✅ Updated!');
-        } catch (error) {
-            showToast('❌ Error');
-        }
-    });
-
-    // ADMIN
-    window.promptAdminPassword = function() {
-        const password = prompt('Admin password:');
-        if (password === ADMIN_PASSWORD) {
-            sessionStorage.setItem('streamx-admin', 'true');
-            navigateTo('admin');
-        } else if (password !== null) {
-            showToast('❌ Wrong password');
-        }
-    };
-
-    function renderAdminPanel() {
-        const container = document.getElementById('adminPostsList');
-        
-        if (posts.length === 0) {
-            container.innerHTML = '<p style="text-align:center;color:#6b7280;">No posts</p>';
-            return;
-        }
-        
-        container.innerHTML = posts.map(post => {
-            const user = users.find(u => u.email === post.created_by) || { full_name: 'User' };
-            return `
-                <div class="admin-post-item">
-                    <img class="admin-post-thumbnail" src="${post.content_urls?.[0] || 'https://via.placeholder.com/64'}">
-                    <div class="admin-post-info">
-                        <div class="admin-post-caption">${post.caption || 'No caption'}</div>
-                        <div class="admin-post-stats">${formatCount(post.views_count || 0)} views • ${user.full_name}</div>
-                    </div>
-                    <div>
-                        <button class="btn-views" onclick="increaseViews('${post.id}', 10000)">+10K</button>
-                        <button class="btn-delete" onclick="deletePost('${post.id}')">Delete</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    window.increaseViews = async function(postId, amount) {
-        const post = posts.find(p => p.id === postId);
-        if (post) {
-            await updateDoc(doc(db, 'posts', postId), { views_count: (post.views_count || 0) + amount });
-            await startProgressiveLoad();
-            renderAdminPanel();
-            showToast('✅ Views increased!');
-        }
-    };
-
-    window.deletePost = async function(postId) {
-        if (!confirm('Delete post?')) return;
-        await deleteDoc(doc(db, 'posts', postId));
-        await startProgressiveLoad();
-        renderAdminPanel();
-        showToast('✅ Deleted!');
-    };
-
-    // LIGHTBOX
-    document.getElementById('lightboxClose').addEventListener('click', () => {
-        document.getElementById('lightbox').classList.remove('active');
-    });
-
-    window.addEventListener('load', () => {
-        console.log('✅ App loaded!');
-    });
-
 </script>
 </body>
 </html>
