@@ -3931,6 +3931,7 @@
     </div>
 
 
+
 <script>
     const firebaseConfig = {
         apiKey: "AIzaSyDO2EKbZYfy6ah_95xDo9m8MRfXtd9BExs",
@@ -3949,14 +3950,13 @@
     
     const ADMIN_PASSWORD = 'VNAXXTTM';
 
-    // ⚠️ CRITICAL: Define DEFAULT_USERS FIRST before using it
     const DEFAULT_USERS = [
-        {id: 'default1', email: 'darkmasterstoresales@streamx.com', full_name: 'Dark Master Store', profile_picture: 'https://i.postimg.cc/QCm9mF6Y/Screenshot-2025-12-14-173436.png', bio: 'Daily Sales', verified: true, verified_type: 'blue'},
-        {id: 'default2', email: 'djbeelzelkfanpage@streamx.com', full_name: 'Dj Beelze lk', profile_picture: 'https://i.postimg.cc/ncrgBfQx/IMG-8580.jpg', bio: 'DJ Content Dropping on You Tube, Bookings Call 081 809 6159 ', verified: true, verified_type: 'blue'},
+        {id: 'default1', email: 'darkmasterstoresales@streamx.com', full_name: 'Dark Master Store', profile_picture: 'https://i.postimg.cc/wTzSNgMv/file-000000000408622f85e700a0863b3693.png', bio: 'Daily Sales', verified: true, verified_type: 'blue'},
+        {id: 'default2', email: 'djbeelzelkfanpage@streamx.com', full_name: 'Dj Beelze lk', profile_picture: 'https://i.postimg.cc/wTzSNgMv/file-000000000408622f85e700a0863b3693.png', bio: 'DJ Content', verified: true, verified_type: 'blue'},
         {id: 'default3', email: 'doctordoris92@streamx.com', full_name: 'Dr Doris Kgadi', profile_picture: 'https://i.postimg.cc/g0CBZc5H/Red-Black-Modern-Food-Promotion-A4-Flyer-20250904-233556-0000.png', bio: 'Traditional Healing 0799788154', verified: true, verified_type: 'black'},
         {id: 'default4', email: 'stiaan@streamx.com', full_name: 'Stiaan Venter', profile_picture: 'https://i.postimg.cc/kXPFJcfd/Screenshot-20251213-103723.jpg', bio: 'Forex Trader', verified: true, verified_type: 'blue'},
-        {id: 'default5', email: 'sarah.jones@streamx.com', full_name: 'Sarah Jones', profile_picture: 'https://i.pravatar.cc/150?img=1', bio: 'Content creator 📸', verified: false},
-        {id: 'default6', email: 'mike.chen@streamx.com', full_name: 'Mike Chen', profile_picture: 'https://i.pravatar.cc/150?img=12', bio: 'Tech enthusiast 💻', verified: false}
+        {id: 'default5', email: 'sarah.jones@streamx.com', full_name: 'Sarah Jones', profile_picture: 'https://i.pravatar.cc/150?img=1', bio: 'Content creator', verified: false},
+        {id: 'default6', email: 'mike.chen@streamx.com', full_name: 'Mike Chen', profile_picture: 'https://i.pravatar.cc/150?img=12', bio: 'Tech enthusiast', verified: false}
     ];
 
     const DEFAULT_POSTS = [
@@ -3964,7 +3964,9 @@
         {id: 'dp2', caption: 'For traditional Healing & Herbs Contact 0799788154 or Email doctordoris92@gmail.com', content_urls: ['https://i.postimg.cc/wTzSNgMv/file-000000000408622f85e700a0863b3693.png'], content_type: 'image', views_count: 4232233, likes_count: 4332, likedBy: [], comments_count: 0, created_by: 'doctordoris92@streamx.com', created_date: new Date(Date.now() - 86400000 * 3).toISOString(), hashtags: ['healing'], comments_enabled: false},
         {id: 'dp3', caption: 'Summer vibes🌅🎵', content_urls: ['https://i.postimg.cc/0y6ftpRy/1759764743175.jpg'], content_type: 'image', views_count: 1665433, likes_count: 123211, likedBy: [], comments_count: 23332, created_by: 'stiaan@streamx.com', created_date: new Date(Date.now() - 86400000 * 4).toISOString(), hashtags: ['summer'], comments_enabled: true},
         {id: 'dp4', caption: 'Manje Clean like heaven 🌅', content_urls: ['https://i.postimg.cc/JnLXmXyj/20231027-222456.jpg'], content_type: 'image', views_count: 25644, likes_count: 4533, likedBy: [], comments_count: 454, created_by: 'djbeelzelkfanpage@streamx.com', created_date: new Date(Date.now() - 86400000 * 5).toISOString(), hashtags: ['djbeelzelk'], comments_enabled: true},
-        {id: 'dp5', caption: 'Another day with South African Legend😍😍😎😎 #ramaphosa', content_urls: ['https://i.postimg.cc/x1hGFJty/instagram-1765614811854.jpg'], content_type: 'image', views_count: 5400088, likes_count: 6654, likedBy: [], comments_count: 543, created_by: 'stiaan@streamx.com', created_date: new Date(Date.now() - 86400000 * 6).toISOString(), hashtags: ['ramaphosa'], comments_enabled: true}
+        {id: 'dp5', caption: 'Another day with South African Legend😍😍😎😎 #ramaphosa', content_urls: ['https://i.postimg.cc/x1hGFJty/instagram-1765614811854.jpg'], content_type: 'image', views_count: 5400088, likes_count: 6654, likedBy: [], comments_count: 543, created_by: 'stiaan@streamx.com', created_date: new Date(Date.now() - 86400000 * 6).toISOString(), hashtags: ['ramaphosa'], comments_enabled: true},
+        {id: 'dp6', caption: 'Beautiful sunset! 🌅', content_urls: ['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800'], content_type: 'image', views_count: 125430, likes_count: 8234, likedBy: [], comments_count: 234, created_by: 'sarah.jones@streamx.com', created_date: new Date(Date.now() - 86400000 * 7).toISOString(), hashtags: ['nature'], comments_enabled: true},
+        {id: 'dp7', caption: 'Tech startup! 🚀', content_urls: ['https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800'], content_type: 'image', views_count: 98765, likes_count: 5432, likedBy: [], comments_count: 187, created_by: 'mike.chen@streamx.com', created_date: new Date(Date.now() - 86400000 * 8).toISOString(), hashtags: ['tech'], comments_enabled: true}
     ];
 
     const DEFAULT_STORIES = [
@@ -3974,17 +3976,18 @@
     ];
 
     const DEFAULT_MARKET_ITEMS = [
-        {id: 'dm1', name: 'iPhone 14 Pro', description: 'Perfect condition!', location: 'Johannesburg', category: 'Electronics', condition: 'New', whatsapp: '+27123456789', image_url: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=600', likes_count: 1234, created_by: 'mike.chen@streamx.com', created_date: new Date(Date.now() - 86400000).toISOString()}
+        {id: 'dm1', name: 'iPhone 14 Pro', description: 'Perfect condition!', location: 'Johannesburg', whatsapp: '+27123456789', image_url: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=600', likes_count: 1234, created_by: 'mike.chen@streamx.com', created_date: new Date().toISOString()}
     ];
 
     const DEFAULT_REELS = [
-        {id: 'dr1', video_url: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4', caption: 'Amazing! 💃', views_count: 456789, likes_count: 34567, likedBy: [], comments_enabled: true, comments_count: 1234, created_by: 'sarah.jones@streamx.com', created_date: new Date(Date.now() - 86400000).toISOString()}
+        {id: 'dr1', video_url: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4', caption: 'Amazing! 💃', views_count: 456789, likes_count: 34567, likedBy: [], comments_enabled: true, created_by: 'sarah.jones@streamx.com', created_date: new Date().toISOString()}
     ];
     
     var savedAccounts = JSON.parse(localStorage.getItem('streamx-saved-accounts') || '[]');
     var currentUser = JSON.parse(localStorage.getItem('streamx-current-user') || 'null');
     var currentPage = 'feed';
     var posts = [];
+    var allPosts = []; // Store all posts here
     var musicPosts = [];
     var stories = DEFAULT_STORIES;
     var reels = DEFAULT_REELS;
@@ -4022,18 +4025,13 @@
     var aiMessages = [];
     var aiImageFile = null;
     var groupPictureFile = null;
-    var currentMessageAction = null;
     var isRecording = false;
     var mediaRecorder = null;
     var audioChunks = [];
     var verifyType = 'blue';
-    var lastPostDoc = null;
     var currentPostIndex = 0;
     var isLoadingPost = false;
-    var postsListener = null;
-    var storiesListener = null;
-    var musicListener = null;
-    var adsListener = null;
+    var postsLoaded = false;
 
     function formatCount(num) {
         if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
@@ -4081,25 +4079,63 @@
     }
 
     window.addEventListener('load', function() {
-        console.log('✅ StreamX Initialized - Lazy Loading Active');
-        history.pushState({ page: 'feed' }, '', window.location.href);
+        console.log('✅ StreamX Ready - Lazy Loading Active');
         
         if (!currentUser) {
             showAuthModal();
         } else {
             updateHeaderUI();
             updateNavButtons();
-            renderStories();
+            // Load all posts from Firestore on startup (but render one by one)
+            loadAllPostsFromFirebase();
         }
         setupEventListeners();
     });
 
-    window.addEventListener('popstate', function(e) {
-        e.preventDefault();
-        if (currentPage !== 'feed') navigateTo('feed');
-    });
+    // Load all posts from Firebase once, then show them one by one
+    async function loadAllPostsFromFirebase() {
+        try {
+            // Load posts without orderBy to avoid index requirement
+            const snapshot = await db.collection('posts').limit(100).get();
+            const firePosts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+                .filter(p => !p.is_music && !p.is_ad && !p.is_story && !p.is_reel);
+            
+            // Sort by date manually
+            firePosts.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+            
+            allPosts = [...firePosts, ...DEFAULT_POSTS];
+            console.log(`✅ ${allPosts.length} posts loaded`);
+            postsLoaded = true;
+            
+            // Render first 3 posts
+            renderPosts();
+        } catch (error) {
+            console.error('Error loading posts:', error);
+            allPosts = [...DEFAULT_POSTS];
+            renderPosts();
+        }
 
-    let lastScrollPosition = 0;
+        // Load stories
+        try {
+            const storiesSnap = await db.collection('posts').where('is_story', '==', true).limit(20).get();
+            const fireStories = storiesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            stories = fireStories.length > 0 ? [...fireStories, ...DEFAULT_STORIES] : DEFAULT_STORIES;
+            renderStories();
+        } catch (error) {
+            stories = DEFAULT_STORIES;
+            renderStories();
+        }
+
+        // Load users
+        try {
+            const usersSnap = await db.collection('users').limit(50).get();
+            const fireUsers = usersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            users = fireUsers.length > 0 ? [...fireUsers, ...DEFAULT_USERS] : DEFAULT_USERS;
+        } catch (error) {
+            users = DEFAULT_USERS;
+        }
+    }
+
     window.addEventListener('scroll', function() {
         const bottomNav = document.getElementById('bottomNav');
         const currentScroll = window.scrollY;
@@ -4112,8 +4148,8 @@
             }
             
             // Load one more post when near bottom
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 800) {
-                loadOnePost();
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+                loadOneMorePost();
             }
         }
         lastScrollPosition = currentScroll;
@@ -4134,9 +4170,7 @@
 
         document.getElementById('searchInput').addEventListener('input', function(e) {
             searchQuery = e.target.value.toLowerCase();
-            posts = [];
             currentPostIndex = 0;
-            lastPostDoc = null;
             renderPosts();
         });
 
@@ -4204,12 +4238,6 @@
 
         document.getElementById('marketSearch').addEventListener('input', function() {
             if (marketMode === 'view' || marketMode === 'buy') renderMarketItems();
-        });
-
-        document.addEventListener('click', function(e) {
-            if (currentMessageAction && !e.target.closest('.message-actions-popup') && !e.target.closest('.message-bubble')) {
-                closeMessageActions();
-            }
         });
     }
 
@@ -4311,6 +4339,7 @@
             saveAccountToList(currentUser);
             hideAuthModal();
             updateHeaderUI();
+            loadAllPostsFromFirebase();
             showToast('Welcome! 🎉');
         } catch (error) {
             showAuthError(error.message);
@@ -4359,6 +4388,7 @@
             saveAccountToList(currentUser);
             hideAuthModal();
             updateHeaderUI();
+            loadAllPostsFromFirebase();
             showToast('Account created! 🎉');
         } catch (error) {
             showAuthError(error.message);
@@ -4390,6 +4420,7 @@
                 saveAccountToList(currentUser);
                 hideAuthModal();
                 updateHeaderUI();
+                loadAllPostsFromFirebase();
                 showToast('Welcome back! 🎉');
             }
         } catch (error) {
@@ -4416,7 +4447,7 @@
     }
 
     function handleLogout() {
-        if (confirm('Are you sure you want to logout?')) {
+        if (confirm('Logout?')) {
             auth.signOut();
             currentUser = null;
             localStorage.removeItem('streamx-current-user');
@@ -4428,45 +4459,45 @@
     }
 
     async function changeResetCode() {
-        const newResetCode = prompt('Enter new reset code (must start with r):');
-        if (!newResetCode || !newResetCode.startsWith('r') || newResetCode.length < 6) {
-            showToast('Invalid reset code!', 'error');
+        const newCode = prompt('Enter new reset code (start with r):');
+        if (!newCode || !newCode.startsWith('r') || newCode.length < 6) {
+            showToast('Invalid!', 'error');
             return;
         }
         try {
-            await db.collection('users').doc(currentUser.id).update({ resetCode: newResetCode });
-            currentUser.resetCode = newResetCode;
+            await db.collection('users').doc(currentUser.id).update({ resetCode: newCode });
+            currentUser.resetCode = newCode;
             localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
-            document.getElementById('profileResetCode').textContent = newResetCode;
-            showToast('✅ Reset code updated!');
+            document.getElementById('profileResetCode').textContent = newCode;
+            showToast('✅ Updated!');
         } catch (error) {
             showToast('Error', 'error');
         }
     }
 
     async function editProfileName() {
-        const newName = prompt('Enter new name:', currentUser.full_name);
+        const newName = prompt('New name:', currentUser.full_name);
         if (!newName || !newName.trim()) return;
         try {
             await db.collection('users').doc(currentUser.id).update({ full_name: newName.trim() });
             currentUser.full_name = newName.trim();
             localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
             document.getElementById('profileName').textContent = newName.trim();
-            showToast('✅ Name updated!');
+            showToast('✅ Updated!');
         } catch (error) {
             showToast('Error', 'error');
         }
     }
 
     async function editBio() {
-        const newBio = prompt('Enter your bio:', currentUser.bio || '');
+        const newBio = prompt('Enter bio:', currentUser.bio || '');
         if (newBio === null) return;
         try {
             await db.collection('users').doc(currentUser.id).update({ bio: newBio.trim() });
             currentUser.bio = newBio.trim();
             localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
             renderProfile(currentUser);
-            showToast('✅ Bio updated!');
+            showToast('✅ Updated!');
         } catch (error) {
             showToast('Error', 'error');
         }
@@ -4491,7 +4522,7 @@
             currentUser.whatsapp = whatsapp.trim();
             localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
             renderProfile(currentUser);
-            showToast('✅ Contacts updated!');
+            showToast('✅ Updated!');
         } catch (error) {
             showToast('Error', 'error');
         }
@@ -4529,6 +4560,7 @@
                 localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
                 document.getElementById('accountsModal').classList.remove('active');
                 updateHeaderUI();
+                loadAllPostsFromFirebase();
                 navigateTo('feed');
                 showToast(`Switched to ${currentUser.full_name}!`);
             }
@@ -4724,7 +4756,7 @@
         if (page === 'feed') {
             document.getElementById('feedPage').classList.remove('hidden');
             renderPosts();
-            loadStoriesOnDemand();
+            renderStories();
         } else if (page === 'music') {
             document.getElementById('musicPage').classList.remove('hidden');
             loadMusicOnDemand();
@@ -4734,7 +4766,7 @@
             document.getElementById('profilePage').classList.remove('hidden');
         } else if (page === 'users') {
             document.getElementById('usersPage').classList.remove('hidden');
-            loadUsersOnDemand();
+            renderUsers();
         } else if (page === 'conversations') {
             document.getElementById('conversationsPage').classList.remove('hidden');
             loadConversationsOnDemand();
@@ -4751,83 +4783,44 @@
         }
     }
 
-    function loadStoriesOnDemand() {
-        if (!storiesListener) {
-            storiesListener = db.collection('posts')
-                .where('is_story', '==', true)
-                .orderBy('created_date', 'desc')
-                .limit(10)
-                .onSnapshot(snapshot => {
-                    const fireStories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    stories = fireStories.length > 0 ? [...fireStories, ...DEFAULT_STORIES] : DEFAULT_STORIES;
-                    renderStories();
-                });
-        }
-    }
-
     function loadMusicOnDemand() {
-        if (!musicListener) {
-            musicListener = db.collection('posts')
-                .where('is_music', '==', true)
-                .orderBy('created_date', 'desc')
-                .limit(20)
-                .onSnapshot(snapshot => {
-                    musicPosts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    renderMusicFeed();
-                });
-        } else {
-            renderMusicFeed();
-        }
-    }
-
-    function loadUsersOnDemand() {
-        db.collection('users')
-            .limit(30)
-            .get()
+        db.collection('posts').where('is_music', '==', true).limit(20).get()
             .then(snapshot => {
-                const fireUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                users = fireUsers.length > 0 ? [...fireUsers, ...DEFAULT_USERS] : DEFAULT_USERS;
-                renderUsers();
+                musicPosts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderMusicFeed();
+            })
+            .catch(() => {
+                musicPosts = [];
+                renderMusicFeed();
             });
     }
 
     function loadConversationsOnDemand() {
         if (!currentUser) return;
 
+        // Simplified query - no orderBy to avoid index requirement
         db.collection('conversations')
             .where('participants', 'array-contains', currentUser.email)
-            .orderBy('created_date', 'desc')
-            .limit(20)
-            .onSnapshot(snapshot => {
+            .limit(30)
+            .get()
+            .then(snapshot => {
                 conversations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Sort manually
+                conversations.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
                 updateMessengerBadge();
+                renderConversations();
+            })
+            .catch(error => {
+                console.error('Error loading conversations:', error);
+                conversations = [];
                 renderConversations();
             });
     }
 
     function loadAdminData() {
-        if (!adsListener) {
-            adsListener = db.collection('posts')
-                .where('is_ad', '==', true)
-                .orderBy('created_date', 'desc')
-                .onSnapshot(snapshot => {
-                    ads = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    renderAdminPanel();
-                });
-        }
-
-        db.collection('users').limit(50).get().then(snapshot => {
-            const fireUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            users = [...fireUsers, ...DEFAULT_USERS];
-            renderAdminPanel();
-        });
-
-        db.collection('posts')
-            .orderBy('created_date', 'desc')
-            .limit(50)
-            .get()
+        db.collection('posts').where('is_ad', '==', true).limit(50).get()
             .then(snapshot => {
-                posts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(p => !p.is_music && !p.is_ad && !p.is_story && !p.is_reel);
+                ads = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderAdminPanel();
             });
     }
@@ -4843,86 +4836,50 @@
         }
     }
 
-    async function loadOnePost() {
-        if (isLoadingPost) return;
-        isLoadingPost = true;
-
-        try {
-            if (searchQuery) {
-                // Search mode - load all matching
-                if (currentPostIndex === 0) {
-                    const allPosts = DEFAULT_POSTS.filter(p => 
-                        p.caption.toLowerCase().includes(searchQuery) ||
-                        p.hashtags?.some(h => h.toLowerCase().includes(searchQuery))
-                    );
-                    allPosts.forEach(p => renderSinglePost(p));
-                }
-            } else if (activeHashtag) {
-                // Hashtag filter
-                if (currentPostIndex === 0) {
-                    const filtered = DEFAULT_POSTS.filter(p => p.hashtags?.includes(activeHashtag));
-                    filtered.forEach(p => renderSinglePost(p));
-                }
-            } else {
-                // Normal loading - one by one
-                if (currentPostIndex < DEFAULT_POSTS.length) {
-                    renderSinglePost(DEFAULT_POSTS[currentPostIndex]);
-                    currentPostIndex++;
-                } else if (!lastPostDoc) {
-                    // Try Firebase
-                    const snapshot = await db.collection('posts')
-                        .where('is_music', '==', false)
-                        .where('is_ad', '==', false)
-                        .where('is_story', '==', false)
-                        .where('is_reel', '==', false)
-                        .orderBy('created_date', 'desc')
-                        .limit(1)
-                        .get();
-
-                    if (!snapshot.empty) {
-                        const post = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
-                        renderSinglePost(post);
-                        lastPostDoc = snapshot.docs[0];
-                    }
-                } else {
-                    // Load next from Firebase
-                    const snapshot = await db.collection('posts')
-                        .where('is_music', '==', false)
-                        .where('is_ad', '==', false)
-                        .where('is_story', '==', false)
-                        .where('is_reel', '==', false)
-                        .orderBy('created_date', 'desc')
-                        .startAfter(lastPostDoc)
-                        .limit(1)
-                        .get();
-
-                    if (!snapshot.empty) {
-                        const post = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
-                        renderSinglePost(post);
-                        lastPostDoc = snapshot.docs[0];
-                    }
-                }
-            }
-        } catch (error) {
-            console.error('Error loading post:', error);
-        }
-
-        isLoadingPost = false;
-    }
-
+    // Render posts one by one
     function renderPosts() {
         const container = document.getElementById('postsFeed');
-        container.innerHTML = '<div style="text-align:center;padding:2rem;"><div class="loading"></div></div>';
-
+        container.innerHTML = '';
         currentPostIndex = 0;
-        lastPostDoc = null;
-        
+        posts = [];
+
+        // Filter posts
+        let filtered = allPosts;
+        if (searchQuery) {
+            filtered = allPosts.filter(p =>
+                p.caption?.toLowerCase().includes(searchQuery) ||
+                p.hashtags?.some(h => h.toLowerCase().includes(searchQuery))
+            );
+        }
+        if (activeHashtag) {
+            filtered = filtered.filter(p => p.hashtags?.includes(activeHashtag));
+        }
+
+        posts = filtered;
+
+        if (posts.length === 0) {
+            container.innerHTML = `<div class="empty-state"><h3>No posts found</h3></div>`;
+            return;
+        }
+
+        // Show first 3 posts
+        for (let i = 0; i < Math.min(3, posts.length); i++) {
+            renderSinglePost(posts[i]);
+            currentPostIndex++;
+        }
+    }
+
+    function loadOneMorePost() {
+        if (isLoadingPost || currentPostIndex >= posts.length) return;
+        isLoadingPost = true;
+
         setTimeout(() => {
-            container.innerHTML = '';
-            for (let i = 0; i < 3; i++) {
-                loadOnePost();
+            if (currentPostIndex < posts.length) {
+                renderSinglePost(posts[currentPostIndex]);
+                currentPostIndex++;
             }
-        }, 300);
+            isLoadingPost = false;
+        }, 200);
     }
 
     function renderSinglePost(post) {
@@ -5047,14 +5004,16 @@
         const full = document.getElementById(`caption-full-${postId}`);
         const btn = document.getElementById(`read-more-${postId}`);
 
-        if (short.style.display === 'none') {
-            short.style.display = 'inline';
-            full.style.display = 'none';
-            btn.textContent = '...more';
-        } else {
-            short.style.display = 'none';
-            full.style.display = 'inline';
-            btn.textContent = 'less';
+        if (short && full && btn) {
+            if (short.style.display === 'none') {
+                short.style.display = 'inline';
+                full.style.display = 'none';
+                btn.textContent = '...more';
+            } else {
+                short.style.display = 'none';
+                full.style.display = 'inline';
+                btn.textContent = 'less';
+            }
         }
     }
 
@@ -5065,8 +5024,6 @@
 
     function filterByHashtag(tag) {
         activeHashtag = activeHashtag === tag ? null : tag;
-        posts = [];
-        currentPostIndex = 0;
         renderPosts();
     }
 
@@ -5159,7 +5116,7 @@
                     expires_at: new Date(Date.now() + 86400000).toISOString()
                 });
 
-                showToast(`✅ Published! ${formatCount(initialViews)} views!`);
+                showToast(`✅ Published!`);
                 closeStoryModal();
             } catch (error) {
                 showToast('Error', 'error');
@@ -5458,7 +5415,7 @@
         renderAIChat();
 
         setTimeout(() => {
-            aiMessages.push({ role: 'ai', text: "I'm X AI! In the full version I can help with images, math, and questions. 🚀" });
+            aiMessages.push({ role: 'ai', text: "I'm X AI! Upgrade to unlock full features 🚀" });
             renderAIChat();
         }, 1000);
     }
@@ -5474,13 +5431,14 @@
     }
 
     function loadMarketOnDemand() {
-        db.collection('market')
-            .orderBy('created_date', 'desc')
-            .limit(20)
-            .get()
+        db.collection('market').limit(30).get()
             .then(snapshot => {
-                marketItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                marketItems = [...snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })), ...DEFAULT_MARKET_ITEMS];
                 if (marketMode === 'view' || marketMode === 'buy') renderMarketItems();
+            })
+            .catch(() => {
+                marketItems = DEFAULT_MARKET_ITEMS;
+                renderMarketItems();
             });
     }
 
@@ -5500,7 +5458,7 @@
     function renderMarketItems() {
         const container = document.getElementById('marketContent');
         const searchQuery = document.getElementById('marketSearch').value.toLowerCase();
-        let filtered = [...marketItems, ...DEFAULT_MARKET_ITEMS];
+        let filtered = marketItems;
 
         if (marketMode === 'buy') filtered = filtered.filter(item => item.created_by !== currentUser.email);
         if (searchQuery) {
@@ -5673,7 +5631,6 @@
                     <video src="${reel.video_url}" class="reel-video" ${index === 0 ? 'autoplay' : ''} loop playsinline></video>
                     <div class="reel-overlay">
                         <div class="reel-author" style="display:flex;align-items:center;">${user.full_name}${verifyBadge}</div>
-                        ${reel.caption ? `<div class="reel-caption">${reel.caption}</div>` : ''}
                     </div>
                 </div>
             `;
@@ -5761,12 +5718,15 @@
     function linkify(text) {
         if (!text) return '';
         const urlPattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*)/ig;
-        return text.replace(urlPattern, match => `<a href__="${match}" target="_blank" style="color:#3b82f6;">${match}</a>`);
+        const emailPattern = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
+        return text
+            .replace(urlPattern, match => `<a href__="${match}" target="_blank" style="color:#3b82f6;text-decoration:underline;">${match}</a>`)
+            .replace(emailPattern, match => `<a href__="mailto:${match}" style="color:#3b82f6;text-decoration:underline;">${match}</a>`);
     }
 
     async function openPostModal(postId) {
         try {
-            currentViewPost = posts.find(p => p.id === postId) || DEFAULT_POSTS.find(p => p.id === postId);
+            currentViewPost = allPosts.find(p => p.id === postId);
             if (!currentViewPost) return;
 
             const user = users.find(u => u.email === currentViewPost.created_by) || { full_name: 'User', profile_picture: '' };
@@ -5807,14 +5767,18 @@
         try {
             if (commentUnsubscribe) commentUnsubscribe();
 
+            // Simple query without orderBy
             commentUnsubscribe = db.collection('posts').doc(postId).collection('comments')
-                .orderBy('created_date', 'asc')
                 .limit(50)
                 .onSnapshot(snapshot => {
                     currentComments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    // Sort manually
+                    currentComments.sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
                     renderComments();
                 });
-        } catch (error) {}
+        } catch (error) {
+            console.error('Error loading comments:', error);
+        }
     }
 
     function renderComments() {
@@ -5912,7 +5876,7 @@
 
     async function likePost(postId) {
         try {
-            const post = posts.find(p => p.id === postId) || DEFAULT_POSTS.find(p => p.id === postId);
+            const post = allPosts.find(p => p.id === postId);
             if (!post || post.id.startsWith('dp')) return;
 
             const likedBy = post.likedBy || [];
@@ -6029,6 +5993,9 @@
             currentHashtags = [];
             renderPreviews();
             renderHashtags();
+            
+            // Reload posts
+            loadAllPostsFromFirebase();
             navigateTo('feed');
         } catch (error) {
             showToast('Error', 'error');
@@ -6074,6 +6041,7 @@
         try {
             await db.collection('posts').doc(postId).delete();
             showToast('Deleted!');
+            loadAllPostsFromFirebase();
         } catch (error) {
             showToast('Error', 'error');
         }
@@ -6117,12 +6085,27 @@
         document.getElementById('profileBio').textContent = user.bio || '';
         document.getElementById('profileBio').style.display = user.bio ? 'block' : 'none';
 
-        const userPosts = posts.filter(p => p.created_by === user.email);
+        // Show user's posts
+        const userPosts = allPosts.filter(p => p.created_by === user.email);
         document.getElementById('profilePostCount').textContent = formatCount(userPosts.length);
         document.getElementById('profileViewCount').textContent = formatCount(userPosts.reduce((sum, p) => sum + (p.views_count || 0), 0));
         document.getElementById('profileLikeCount').textContent = formatCount(userPosts.reduce((sum, p) => sum + (p.likes_count || 0), 0));
 
-        document.getElementById('profilePosts').innerHTML = userPosts.length === 0 ? `<div class="empty-state"><h3>No posts</h3></div>` : '';
+        const profilePostsContainer = document.getElementById('profilePosts');
+        if (userPosts.length === 0) {
+            profilePostsContainer.innerHTML = `<div class="empty-state"><h3>No posts</h3></div>`;
+        } else {
+            profilePostsContainer.innerHTML = userPosts.slice(0, 10).map(post => `
+                <div style="margin-bottom:1rem;background:white;border-radius:0.75rem;padding:1rem;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+                    <p style="font-size:0.875rem;margin-bottom:0.5rem;">${post.caption?.substring(0, 80) || ''}</p>
+                    ${post.content_urls?.[0] ? `<img src="${post.content_urls[0]}" style="width:100%;height:150px;object-fit:cover;border-radius:0.5rem;margin-bottom:0.5rem;">` : ''}
+                    <div style="display:flex;gap:1rem;font-size:0.8125rem;color:#6b7280;">
+                        <span>❤️ ${formatCount(post.likes_count || 0)}</span>
+                        <span>👁️ ${formatCount(post.views_count || 0)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
     }
 
     async function handleProfilePictureUpload(e) {
@@ -6161,7 +6144,7 @@
             return `
                 <div class="user-quick-card" onclick="viewProfile('${user.email}')">
                     <img src="${user.profile_picture}" class="user-quick-avatar">
-                    <div class="user-quick-name" style="display:flex;align-items:center;justify-content:center;">${user.full_name.split(' ')[0]}${verifyBadge}</div>
+                    <div class="user-quick-name" style="display:flex;align-items:center;justify-content:center;gap:0.25rem;">${user.full_name.split(' ')[0]}${verifyBadge}</div>
                     <button class="user-quick-chat-btn" onclick="event.stopPropagation();startChatWith('${user.email}')">💬</button>
                 </div>
             `;
@@ -6173,7 +6156,7 @@
                 <div class="user-card" onclick="viewProfile('${user.email}')">
                     <img src="${user.profile_picture}" class="user-card-avatar">
                     <div class="user-card-info">
-                        <div class="user-card-name" style="display:flex;align-items:center;">${user.full_name}${verifyBadge}</div>
+                        <div class="user-card-name" style="display:flex;align-items:center;gap:0.25rem;">${user.full_name}${verifyBadge}</div>
                         <div class="user-card-email">${user.email}</div>
                     </div>
                     <button class="message-icon-btn" onclick="event.stopPropagation();startChatWith('${user.email}')">
@@ -6222,7 +6205,7 @@
                 <div class="conversation-card" onclick="openConversation('${otherUser.email}')">
                     <img src="${otherUser.profile_picture}" class="conversation-avatar">
                     <div class="conversation-info">
-                        <div class="conversation-name" style="display:flex;align-items:center;">${otherUser.full_name}${verifyBadge}</div>
+                        <div class="conversation-name" style="display:flex;align-items:center;gap:0.25rem;">${otherUser.full_name}${verifyBadge}</div>
                         <div class="conversation-last-message">${conv.lastMessage || 'No messages'}</div>
                     </div>
                 </div>
@@ -6292,18 +6275,19 @@
         }
 
         if (currentGroupChat) {
-            const verifyBadge = getVerificationBadge({ verified: false });
             document.getElementById('messengerAvatar').src = currentGroupChat.group_picture;
             document.getElementById('messengerName').textContent = currentGroupChat.group_name;
             document.getElementById('messengerVerifyBadge').innerHTML = '';
             document.getElementById('groupInfoBtn').style.display = 'block';
             document.getElementById('blockBtn').style.display = 'none';
 
+            // Simple query without orderBy
             messageUnsubscribe = db.collection('conversations').doc(currentGroupChat.id).collection('messages')
-                .orderBy('timestamp', 'asc')
-                .limit(50)
+                .limit(100)
                 .onSnapshot(snapshot => {
                     messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    // Sort manually
+                    messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                     renderGroupMessages();
                 });
 
@@ -6332,10 +6316,10 @@
             }
 
             messageUnsubscribe = db.collection('conversations').doc(conversationId).collection('messages')
-                .orderBy('timestamp', 'asc')
-                .limit(50)
+                .limit(100)
                 .onSnapshot(snapshot => {
                     messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                     renderMessages();
                 });
         }
@@ -6390,7 +6374,7 @@
             if (msg.type === 'image') {
                 return `
                     <div class="message-bubble ${isSent ? 'sent' : 'received'}">
-                        <div class="message-sender-name" style="display:flex;align-items:center;">${sender.full_name}${senderBadge}</div>
+                        <div class="message-sender-name" style="display:flex;align-items:center;gap:0.25rem;">${sender.full_name}${senderBadge}</div>
                         <img src="${msg.imageUrl}" class="message-image" onclick="openLightbox('${msg.imageUrl}', 'image')">
                         <div class="message-time">${time}</div>
                     </div>
@@ -6399,7 +6383,7 @@
 
             return `
                 <div class="message-bubble ${isSent ? 'sent' : 'received'}">
-                    <div class="message-sender-name" style="display:flex;align-items:center;">${sender.full_name}${senderBadge}</div>
+                    <div class="message-sender-name" style="display:flex;align-items:center;gap:0.25rem;">${sender.full_name}${senderBadge}</div>
                     <div>${linkify(msg.text)}</div>
                     <div class="message-time">${time}</div>
                 </div>
@@ -6409,12 +6393,7 @@
         container.scrollTop = container.scrollHeight;
     }
 
-    function closeMessageActions() {
-        if (currentMessageAction) {
-            currentMessageAction.remove();
-            currentMessageAction = null;
-        }
-    }
+    function closeMessageActions() {}
 
     async function sendMessage() {
         const input = document.getElementById('messageInput');
@@ -6465,9 +6444,8 @@
             } else {
                 const participants = [currentUser.email, currentChatUser.email].sort();
                 const convSnapshot = await db.collection('conversations').where('participants', '==', participants).get();
-                const conversationId = convSnapshot.docs[0].id;
 
-                await db.collection('conversations').doc(conversationId).collection('messages').add({
+                await db.collection('conversations').doc(convSnapshot.docs[0].id).collection('messages').add({
                     imageUrl: compressed,
                     type: 'image',
                     sender: currentUser.email,
@@ -6542,25 +6520,6 @@
         }
     }
 
-    function playVoiceNote(voiceId, voiceUrl) {
-        const audioElement = document.getElementById('voicePlayer') || createVoicePlayer();
-        if (currentAudioPlaying === voiceId) {
-            audioElement.paused ? audioElement.play() : audioElement.pause();
-        } else {
-            audioElement.src = voiceUrl;
-            audioElement.play();
-            currentAudioPlaying = voiceId;
-        }
-    }
-
-    function createVoicePlayer() {
-        const audio = document.createElement('audio');
-        audio.id = 'voicePlayer';
-        audio.style.display = 'none';
-        document.body.appendChild(audio);
-        return audio;
-    }
-
     function renderAdminPanel() {
         const activeAds = ads.filter(a => !a.archived);
 
@@ -6569,19 +6528,18 @@
             <div class="admin-section">
                 <h3>Ads 📢</h3>
                 <button class="admin-btn admin-btn-submit" onclick="openAdModal()">+ Create</button>
-                ${activeAds.length === 0 ? '<p style="text-align:center;color:#6b7280;">No ads</p>' : ''}
+                ${activeAds.length === 0 ? '<p style="text-align:center;color:#6b7280;">No ads</p>' : activeAds.map(ad => `
+                    <div class="admin-post-item">
+                        <img src="${ad.content_urls?.[0]}" class="admin-post-thumbnail">
+                        <div class="admin-post-info">
+                            <div>${ad.company_name}</div>
+                            <div>👁️ ${formatCount(ad.views_count || 0)}</div>
+                        </div>
+                        <button class="admin-action-btn delete" onclick="deleteAd('${ad.id}')">Delete</button>
+                    </div>
+                `).join('')}
             </div>
         `;
-    }
-
-    async function grantVerification(userId, type) {
-        if (!confirm(`Grant ${type} badge?`)) return;
-        try {
-            await db.collection('users').doc(userId).update({ verified: true, verified_type: type });
-            showToast(`✅ ${type} badge granted!`);
-        } catch (error) {
-            showToast('Error', 'error');
-        }
     }
 
     async function deleteAd(adId) {
@@ -6589,6 +6547,7 @@
         try {
             await db.collection('posts').doc(adId).delete();
             showToast('Deleted!');
+            loadAdminData();
         } catch (error) {
             showToast('Error', 'error');
         }
