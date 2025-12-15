@@ -3929,3 +3929,2670 @@
             <span style="color:#ec4899;">Reels</span>
         </button>
     </div>
+
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDO2EKbZYfy6ah_95xDo9m8MRfXtd9BExs",
+        authDomain: "streamx-a4099.firebaseapp.com",
+        projectId: "streamx-a4099",
+        storageBucket: "streamx-a4099.firebasestorage.app",
+        messagingSenderId: "1073155867607",
+        appId: "1:1073155867607:web:f4e0496523d360626a0192",
+        measurementId: "G-7DX6HDZ3S6"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    const auth = firebase.auth();
+    
+    const ADMIN_PASSWORD = 'VNAXXTTM';
+
+    // ⚠️ CRITICAL: Define DEFAULT_USERS FIRST before using it
+    const DEFAULT_USERS = [
+        {id: 'default1', email: 'darkmasterstoresales@streamx.com', full_name: 'Dark Master Store', profile_picture: 'https://i.postimg.cc/QCm9mF6Y/Screenshot-2025-12-14-173436.png', bio: 'Daily Sales', verified: true, verified_type: 'blue'},
+        {id: 'default2', email: 'djbeelzelkfanpage@streamx.com', full_name: 'Dj Beelze lk', profile_picture: 'https://i.postimg.cc/ncrgBfQx/IMG-8580.jpg', bio: 'DJ Content Dropping on You Tube, Bookings Call 081 809 6159 ', verified: true, verified_type: 'blue'},
+        {id: 'default3', email: 'doctordoris92@streamx.com', full_name: 'Dr Doris Kgadi', profile_picture: 'https://i.postimg.cc/g0CBZc5H/Red-Black-Modern-Food-Promotion-A4-Flyer-20250904-233556-0000.png', bio: 'Traditional Healing 0799788154', verified: true, verified_type: 'black'},
+        {id: 'default4', email: 'stiaan@streamx.com', full_name: 'Stiaan Venter', profile_picture: 'https://i.postimg.cc/kXPFJcfd/Screenshot-20251213-103723.jpg', bio: 'Forex Trader', verified: true, verified_type: 'blue'},
+        {id: 'default5', email: 'sarah.jones@streamx.com', full_name: 'Sarah Jones', profile_picture: 'https://i.pravatar.cc/150?img=1', bio: 'Content creator 📸', verified: false},
+        {id: 'default6', email: 'mike.chen@streamx.com', full_name: 'Mike Chen', profile_picture: 'https://i.pravatar.cc/150?img=12', bio: 'Tech enthusiast 💻', verified: false}
+    ];
+
+    const DEFAULT_POSTS = [
+        {id: 'dp1', caption: 'We are looking for sellers Email darkmasterstore@gmail.com', content_urls: ['https://i.postimg.cc/L83fsk7J/Notes-251212-001508-f3b.png'], content_type: 'image', views_count: 34222, likes_count: 2111, likedBy: [], comments_count: 0, created_by: 'darkmasterstoresales@streamx.com', created_date: new Date(Date.now() - 86400000 * 2).toISOString(), hashtags: ['darkmaster'], comments_enabled: true},
+        {id: 'dp2', caption: 'For traditional Healing & Herbs Contact 0799788154 or Email doctordoris92@gmail.com', content_urls: ['https://i.postimg.cc/wTzSNgMv/file-000000000408622f85e700a0863b3693.png'], content_type: 'image', views_count: 4232233, likes_count: 4332, likedBy: [], comments_count: 0, created_by: 'doctordoris92@streamx.com', created_date: new Date(Date.now() - 86400000 * 3).toISOString(), hashtags: ['healing'], comments_enabled: false},
+        {id: 'dp3', caption: 'Summer vibes🌅🎵', content_urls: ['https://i.postimg.cc/0y6ftpRy/1759764743175.jpg'], content_type: 'image', views_count: 1665433, likes_count: 123211, likedBy: [], comments_count: 23332, created_by: 'stiaan@streamx.com', created_date: new Date(Date.now() - 86400000 * 4).toISOString(), hashtags: ['summer'], comments_enabled: true},
+        {id: 'dp4', caption: 'Manje Clean like heaven 🌅', content_urls: ['https://i.postimg.cc/JnLXmXyj/20231027-222456.jpg'], content_type: 'image', views_count: 25644, likes_count: 4533, likedBy: [], comments_count: 454, created_by: 'djbeelzelkfanpage@streamx.com', created_date: new Date(Date.now() - 86400000 * 5).toISOString(), hashtags: ['djbeelzelk'], comments_enabled: true},
+        {id: 'dp5', caption: 'Another day with South African Legend😍😍😎😎 #ramaphosa', content_urls: ['https://i.postimg.cc/x1hGFJty/instagram-1765614811854.jpg'], content_type: 'image', views_count: 5400088, likes_count: 6654, likedBy: [], comments_count: 543, created_by: 'stiaan@streamx.com', created_date: new Date(Date.now() - 86400000 * 6).toISOString(), hashtags: ['ramaphosa'], comments_enabled: true}
+    ];
+
+    const DEFAULT_STORIES = [
+        {id: 'ds1', content_type: 'text', text_content: 'Our future Dj beelze lk', background_color: '#fbbf24', views_count: 43210, created_by: 'djbeelzelkfanpage@streamx.com', created_date: new Date().toISOString()},
+        {id: 'ds2', content_type: 'text', text_content: 'For traditional Healing Contact 0799788154', background_color: '#3b82f6', views_count: 54310, created_by: 'doctordoris92@streamx.com', created_date: new Date().toISOString()},
+        {id: 'ds3', content_type: 'text', text_content: 'South Kings 👑', background_color: '#10b981', views_count: 12210, created_by: 'stiaan@streamx.com', created_date: new Date().toISOString()}
+    ];
+
+    const DEFAULT_MARKET_ITEMS = [
+        {id: 'dm1', name: 'iPhone 14 Pro', description: 'Perfect condition!', location: 'Johannesburg', category: 'Electronics', condition: 'New', whatsapp: '+27123456789', image_url: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=600', likes_count: 1234, created_by: 'mike.chen@streamx.com', created_date: new Date(Date.now() - 86400000).toISOString()}
+    ];
+
+    const DEFAULT_REELS = [
+        {id: 'dr1', video_url: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4', caption: 'Amazing! 💃', views_count: 456789, likes_count: 34567, likedBy: [], comments_enabled: true, comments_count: 1234, created_by: 'sarah.jones@streamx.com', created_date: new Date(Date.now() - 86400000).toISOString()}
+    ];
+    
+    var savedAccounts = JSON.parse(localStorage.getItem('streamx-saved-accounts') || '[]');
+    var currentUser = JSON.parse(localStorage.getItem('streamx-current-user') || 'null');
+    var currentPage = 'feed';
+    var posts = [];
+    var musicPosts = [];
+    var stories = DEFAULT_STORIES;
+    var reels = DEFAULT_REELS;
+    var users = DEFAULT_USERS;
+    var ads = [];
+    var marketItems = DEFAULT_MARKET_ITEMS;
+    var currentChatUser = null;
+    var currentGroupChat = null;
+    var messages = [];
+    var conversations = [];
+    var uploadedFiles = [];
+    var currentHashtags = [];
+    var searchQuery = '';
+    var activeHashtag = null;
+    var messageUnsubscribe = null;
+    var currentAuthTab = 'register';
+    var isAdminAuthenticated = sessionStorage.getItem('streamx-admin') === 'true';
+    var commentsEnabled = true;
+    var currentViewPost = null;
+    var currentComments = [];
+    var commentImageFile = null;
+    var commentUnsubscribe = null;
+    var currentLightboxUrl = '';
+    var selectedMembers = [];
+    var sClickCount = 0;
+    var sClickTimeout = null;
+    var selectedAudio = null;
+    var currentAudioPlaying = null;
+    var marketMode = 'view';
+    var promoteMedia = [];
+    var storyMedia = null;
+    var storyMode = 'text';
+    var audioFile = null;
+    var audioArt = null;
+    var aiMessages = [];
+    var aiImageFile = null;
+    var groupPictureFile = null;
+    var currentMessageAction = null;
+    var isRecording = false;
+    var mediaRecorder = null;
+    var audioChunks = [];
+    var verifyType = 'blue';
+    var lastPostDoc = null;
+    var currentPostIndex = 0;
+    var isLoadingPost = false;
+    var postsListener = null;
+    var storiesListener = null;
+    var musicListener = null;
+    var adsListener = null;
+
+    function formatCount(num) {
+        if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
+        if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+        if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+        return num.toString();
+    }
+
+    function getVerificationBadge(user) {
+        if (!user || !user.verified) return '';
+        const imgUrl = user.verified_type === 'black' 
+            ? 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693ed8c858d2be75ca30c34a/299e285df_ChatGPT_Image_Dec_14_2025_01_05_27_PM.png'
+            : 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693ed8c858d2be75ca30c34a/202cf4d9b_ChatGPT_Image_Dec_14_2025_11_58_09_AM.png';
+        return `<img src="${imgUrl}" style="width:18px;height:18px;margin-left:0.25rem;vertical-align:middle;" alt="verified">`;
+    }
+
+    function generateResetCode() {
+        return 'r' + Math.floor(10000 + Math.random() * 90000);
+    }
+
+    function saveAccountToList(account) {
+        const exists = savedAccounts.find(a => a.email === account.email);
+        if (exists) {
+            exists.full_name = account.full_name;
+            exists.profile_picture = account.profile_picture;
+        } else {
+            savedAccounts.push({
+                email: account.email,
+                full_name: account.full_name,
+                profile_picture: account.profile_picture
+            });
+        }
+        localStorage.setItem('streamx-saved-accounts', JSON.stringify(savedAccounts));
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.animation = 'slideIn 0.3s ease reverse';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    window.addEventListener('load', function() {
+        console.log('✅ StreamX Initialized - Lazy Loading Active');
+        history.pushState({ page: 'feed' }, '', window.location.href);
+        
+        if (!currentUser) {
+            showAuthModal();
+        } else {
+            updateHeaderUI();
+            updateNavButtons();
+            renderStories();
+        }
+        setupEventListeners();
+    });
+
+    window.addEventListener('popstate', function(e) {
+        e.preventDefault();
+        if (currentPage !== 'feed') navigateTo('feed');
+    });
+
+    let lastScrollPosition = 0;
+    window.addEventListener('scroll', function() {
+        const bottomNav = document.getElementById('bottomNav');
+        const currentScroll = window.scrollY;
+        
+        if (currentPage === 'feed') {
+            if (currentScroll > lastScrollPosition && currentScroll > 100) {
+                bottomNav.classList.add('hidden-nav');
+            } else {
+                bottomNav.classList.remove('hidden-nav');
+            }
+            
+            // Load one more post when near bottom
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 800) {
+                loadOnePost();
+            }
+        }
+        lastScrollPosition = currentScroll;
+    });
+
+    function setupEventListeners() {
+        document.getElementById('sButton').addEventListener('click', function(e) {
+            e.stopPropagation();
+            sClickCount++;
+            if (sClickTimeout) clearTimeout(sClickTimeout);
+            if (sClickCount === 3) {
+                sClickCount = 0;
+                openAdminModal();
+            } else {
+                sClickTimeout = setTimeout(() => { sClickCount = 0; }, 1000);
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            searchQuery = e.target.value.toLowerCase();
+            posts = [];
+            currentPostIndex = 0;
+            lastPostDoc = null;
+            renderPosts();
+        });
+
+        document.getElementById('usersSearchInput').addEventListener('input', function(e) {
+            renderUsers(e.target.value.toLowerCase());
+        });
+
+        document.getElementById('fileUploadBtn').addEventListener('click', () => document.getElementById('fileInput').click());
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+        
+        document.getElementById('createHashtag').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addHashtag();
+            }
+        });
+
+        document.getElementById('createForm').addEventListener('submit', handleCreatePost);
+        document.getElementById('cameraBtn').addEventListener('click', function() {
+            if (currentUser) document.getElementById('profilePictureInput').click();
+        });
+        document.getElementById('profilePictureInput').addEventListener('change', handleProfilePictureUpload);
+
+        document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        document.getElementById('imageMessageBtn').addEventListener('click', () => document.getElementById('messageImageInput').click());
+        document.getElementById('messageImageInput').addEventListener('change', handleMessageImage);
+
+        document.getElementById('voiceNoteBtn').addEventListener('mousedown', startVoiceRecording);
+        document.getElementById('voiceNoteBtn').addEventListener('mouseup', stopVoiceRecording);
+
+        document.getElementById('commentImageInput').addEventListener('change', handleCommentImage);
+        document.getElementById('commentInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+        document.getElementById('commentInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitComment();
+            }
+        });
+
+        document.getElementById('storyMediaInput').addEventListener('change', handleStoryMedia);
+        document.getElementById('audioFileInput').addEventListener('change', handleAudioFile);
+        document.getElementById('audioArtInput').addEventListener('change', handleAudioArt);
+        document.getElementById('groupPictureInput').addEventListener('change', handleGroupPicture);
+        document.getElementById('promoteMediaInput').addEventListener('change', handlePromoteMedia);
+        document.getElementById('adMediaInput').addEventListener('change', handleAdMedia);
+        document.getElementById('aiImageInput').addEventListener('change', handleAIImage);
+        document.getElementById('reelVideoInput').addEventListener('change', handleReelUpload);
+
+        document.getElementById('aiInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendAIMessage();
+            }
+        });
+
+        document.getElementById('marketSearch').addEventListener('input', function() {
+            if (marketMode === 'view' || marketMode === 'buy') renderMarketItems();
+        });
+
+        document.addEventListener('click', function(e) {
+            if (currentMessageAction && !e.target.closest('.message-actions-popup') && !e.target.closest('.message-bubble')) {
+                closeMessageActions();
+            }
+        });
+    }
+
+    function toggleCommentsEnabled() {
+        commentsEnabled = !commentsEnabled;
+        const checkbox = document.getElementById('commentsCheckbox');
+        if (commentsEnabled) checkbox.classList.add('checked');
+        else checkbox.classList.remove('checked');
+    }
+
+    function openAdminModal() {
+        if (isAdminAuthenticated) {
+            navigateTo('admin');
+        } else {
+            document.getElementById('adminModalOverlay').classList.add('active');
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminModalError').style.display = 'none';
+        }
+    }
+
+    function closeAdminModal() {
+        document.getElementById('adminModalOverlay').classList.remove('active');
+    }
+
+    function submitAdminPassword() {
+        const password = document.getElementById('adminPasswordInput').value;
+        if (password === ADMIN_PASSWORD) {
+            sessionStorage.setItem('streamx-admin', 'true');
+            isAdminAuthenticated = true;
+            closeAdminModal();
+            navigateTo('admin');
+        } else {
+            document.getElementById('adminModalError').textContent = 'Incorrect password!';
+            document.getElementById('adminModalError').style.display = 'block';
+        }
+    }
+
+    function switchAuthTab(tab) {
+        currentAuthTab = tab;
+        document.getElementById('loginTab').classList.remove('active');
+        document.getElementById('registerTab').classList.remove('active');
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('forgotForm').style.display = 'none';
+
+        if (tab === 'login') {
+            document.getElementById('loginTab').classList.add('active');
+            document.getElementById('loginForm').style.display = 'block';
+        } else if (tab === 'register') {
+            document.getElementById('registerTab').classList.add('active');
+            document.getElementById('registerForm').style.display = 'block';
+        } else if (tab === 'forgot') {
+            document.getElementById('forgotForm').style.display = 'block';
+        }
+        document.getElementById('authError').style.display = 'none';
+    }
+
+    function showAuthModal() {
+        document.getElementById('authModal').style.display = 'flex';
+    }
+
+    function hideAuthModal() {
+        document.getElementById('authModal').style.display = 'none';
+    }
+
+    function showAuthError(message) {
+        document.getElementById('authError').textContent = message;
+        document.getElementById('authError').style.display = 'block';
+    }
+
+    async function signInWithGoogle() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try {
+            const result = await auth.signInWithPopup(provider);
+            const user = result.user;
+            const userDoc = await db.collection('users').where('email', '==', user.email).get();
+
+            if (userDoc.empty) {
+                const newUser = {
+                    email: user.email,
+                    full_name: user.displayName || 'User',
+                    profile_picture: user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&size=200&background=000000&color=ffffff`,
+                    accessCode: Math.floor(100000 + Math.random() * 900000).toString(),
+                    resetCode: generateResetCode(),
+                    created_date: new Date().toISOString(),
+                    blockedUsers: [],
+                    bio: '',
+                    verified: false,
+                    verified_type: ''
+                };
+                const docRef = await db.collection('users').add(newUser);
+                newUser.id = docRef.id;
+                currentUser = newUser;
+            } else {
+                currentUser = { id: userDoc.docs[0].id, ...userDoc.docs[0].data() };
+            }
+
+            localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
+            saveAccountToList(currentUser);
+            hideAuthModal();
+            updateHeaderUI();
+            showToast('Welcome! 🎉');
+        } catch (error) {
+            showAuthError(error.message);
+        }
+    }
+
+    async function signUpWithEmail() {
+        const email = document.getElementById('registerEmail').value.trim();
+        const name = document.getElementById('registerName').value.trim();
+        const password = document.getElementById('registerPassword').value;
+
+        if (!email || !name || !password) {
+            showAuthError('Please fill in all fields');
+            return;
+        }
+        if (password.length < 6) {
+            showAuthError('Password must be at least 6 characters');
+            return;
+        }
+
+        try {
+            document.getElementById('registerText').style.display = 'none';
+            document.getElementById('registerLoading').style.display = 'inline-block';
+
+            const result = await auth.createUserWithEmailAndPassword(email, password);
+            await result.user.updateProfile({ displayName: name });
+
+            const newUser = {
+                email: email,
+                full_name: name,
+                profile_picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=200&background=000000&color=ffffff`,
+                accessCode: Math.floor(100000 + Math.random() * 900000).toString(),
+                resetCode: generateResetCode(),
+                created_date: new Date().toISOString(),
+                blockedUsers: [],
+                bio: '',
+                verified: false,
+                verified_type: ''
+            };
+
+            const docRef = await db.collection('users').add(newUser);
+            newUser.id = docRef.id;
+            currentUser = newUser;
+
+            localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
+            saveAccountToList(currentUser);
+            hideAuthModal();
+            updateHeaderUI();
+            showToast('Account created! 🎉');
+        } catch (error) {
+            showAuthError(error.message);
+        }
+
+        document.getElementById('registerText').style.display = 'inline';
+        document.getElementById('registerLoading').style.display = 'none';
+    }
+
+    async function signInWithEmail() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        if (!email || !password) {
+            showAuthError('Please fill in all fields');
+            return;
+        }
+
+        try {
+            document.getElementById('loginText').style.display = 'none';
+            document.getElementById('loginLoading').style.display = 'inline-block';
+
+            await auth.signInWithEmailAndPassword(email, password);
+            const userDoc = await db.collection('users').where('email', '==', email).get();
+            
+            if (!userDoc.empty) {
+                currentUser = { id: userDoc.docs[0].id, ...userDoc.docs[0].data() };
+                localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
+                saveAccountToList(currentUser);
+                hideAuthModal();
+                updateHeaderUI();
+                showToast('Welcome back! 🎉');
+            }
+        } catch (error) {
+            showAuthError(error.message);
+        }
+
+        document.getElementById('loginText').style.display = 'inline';
+        document.getElementById('loginLoading').style.display = 'none';
+    }
+
+    async function resetPassword() {
+        const email = document.getElementById('forgotEmail').value.trim();
+        if (!email) {
+            showAuthError('Enter your email');
+            return;
+        }
+        try {
+            await auth.sendPasswordResetEmail(email);
+            showToast('Password reset email sent! 📧');
+            switchAuthTab('login');
+        } catch (error) {
+            showAuthError(error.message);
+        }
+    }
+
+    function handleLogout() {
+        if (confirm('Are you sure you want to logout?')) {
+            auth.signOut();
+            currentUser = null;
+            localStorage.removeItem('streamx-current-user');
+            sessionStorage.removeItem('streamx-admin');
+            isAdminAuthenticated = false;
+            showAuthModal();
+            updateHeaderUI();
+        }
+    }
+
+    async function changeResetCode() {
+        const newResetCode = prompt('Enter new reset code (must start with r):');
+        if (!newResetCode || !newResetCode.startsWith('r') || newResetCode.length < 6) {
+            showToast('Invalid reset code!', 'error');
+            return;
+        }
+        try {
+            await db.collection('users').doc(currentUser.id).update({ resetCode: newResetCode });
+            currentUser.resetCode = newResetCode;
+            localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
+            document.getElementById('profileResetCode').textContent = newResetCode;
+            showToast('✅ Reset code updated!');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    async function editProfileName() {
+        const newName = prompt('Enter new name:', currentUser.full_name);
+        if (!newName || !newName.trim()) return;
+        try {
+            await db.collection('users').doc(currentUser.id).update({ full_name: newName.trim() });
+            currentUser.full_name = newName.trim();
+            localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
+            document.getElementById('profileName').textContent = newName.trim();
+            showToast('✅ Name updated!');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    async function editBio() {
+        const newBio = prompt('Enter your bio:', currentUser.bio || '');
+        if (newBio === null) return;
+        try {
+            await db.collection('users').doc(currentUser.id).update({ bio: newBio.trim() });
+            currentUser.bio = newBio.trim();
+            localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
+            renderProfile(currentUser);
+            showToast('✅ Bio updated!');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    async function editContacts() {
+        const website = prompt('Website:', currentUser.website || '');
+        if (website === null) return;
+        const phone = prompt('Phone:', currentUser.phone || '');
+        if (phone === null) return;
+        const whatsapp = prompt('WhatsApp:', currentUser.whatsapp || '');
+        if (whatsapp === null) return;
+
+        try {
+            await db.collection('users').doc(currentUser.id).update({
+                website: website.trim(),
+                phone: phone.trim(),
+                whatsapp: whatsapp.trim()
+            });
+            currentUser.website = website.trim();
+            currentUser.phone = phone.trim();
+            currentUser.whatsapp = whatsapp.trim();
+            localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
+            renderProfile(currentUser);
+            showToast('✅ Contacts updated!');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function showAccountsModal() {
+        const modal = document.getElementById('accountsModal');
+        const list = document.getElementById('savedAccountsList');
+
+        if (savedAccounts.length === 0) {
+            list.innerHTML = '<p style="text-align:center;color:#6b7280;padding:2rem;">No saved accounts</p>';
+        } else {
+            list.innerHTML = savedAccounts.map(account => {
+                const isCurrent = currentUser && account.email === currentUser.email;
+                return `
+                    <div class="account-item ${isCurrent ? 'current' : ''}" onclick="${isCurrent ? '' : `switchToAccount('${account.email}')`}">
+                        <img src="${account.profile_picture}" class="account-avatar-small">
+                        <div class="account-details">
+                            <div class="account-name">${account.full_name}</div>
+                            <div class="account-email">${account.email}</div>
+                        </div>
+                        ${isCurrent ? '<span class="current-badge">Current</span>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+        modal.classList.add('active');
+    }
+
+    async function switchToAccount(email) {
+        try {
+            const snapshot = await db.collection('users').where('email', '==', email).get();
+            if (!snapshot.empty) {
+                currentUser = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
+                localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
+                document.getElementById('accountsModal').classList.remove('active');
+                updateHeaderUI();
+                navigateTo('feed');
+                showToast(`Switched to ${currentUser.full_name}!`);
+            }
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function addNewAccount() {
+        document.getElementById('accountsModal').classList.remove('active');
+        showAuthModal();
+    }
+
+    function openGroupModal() {
+        selectedMembers = [];
+        groupPictureFile = null;
+        const list = document.getElementById('groupMembersList');
+        const availableUsers = users.filter(u => u.email !== currentUser.email);
+
+        list.innerHTML = availableUsers.map(user => `
+            <div class="user-card" onclick="toggleMemberSelection('${user.email}', event)" style="margin-bottom:0.5rem;">
+                <div class="member-checkbox" id="check-${user.email.replace(/[^a-zA-Z0-9]/g, '_')}">
+                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <img src="${user.profile_picture}" class="user-card-avatar">
+                <div class="user-card-info">
+                    <div class="user-card-name">${user.full_name}</div>
+                </div>
+            </div>
+        `).join('');
+
+        document.getElementById('groupModal').classList.add('active');
+    }
+
+    function closeGroupModal() {
+        document.getElementById('groupModal').classList.remove('active');
+        document.getElementById('groupName').value = '';
+        document.getElementById('groupPicturePreview').innerHTML = '';
+    }
+
+    function toggleMemberSelection(email, event) {
+        if (event) event.stopPropagation();
+        const safeEmail = email.replace(/[^a-zA-Z0-9]/g, '_');
+        const checkbox = document.getElementById('check-' + safeEmail);
+        if (!checkbox) return;
+
+        if (selectedMembers.includes(email)) {
+            selectedMembers = selectedMembers.filter(e => e !== email);
+            checkbox.classList.remove('checked');
+        } else {
+            selectedMembers.push(email);
+            checkbox.classList.add('checked');
+        }
+    }
+
+    function handleGroupPicture(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        groupPictureFile = file;
+        const url = URL.createObjectURL(file);
+        document.getElementById('groupPicturePreview').innerHTML = `<img src="${url}" style="width:100px;height:100px;object-fit:cover;border-radius:50%;">`;
+    }
+
+    async function createGroup() {
+        const groupName = document.getElementById('groupName').value.trim();
+
+        if (!groupName) {
+            showToast('Enter group name!', 'error');
+            return;
+        }
+        if (selectedMembers.length < 1) {
+            showToast('Select at least 1 member!', 'error');
+            return;
+        }
+
+        try {
+            const participants = [currentUser.email, ...selectedMembers];
+            let groupPictureUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(groupName)}&size=200&background=000000&color=ffffff`;
+
+            if (groupPictureFile) {
+                groupPictureUrl = await uploadToStorage(groupPictureFile, `groups/${Date.now()}_${groupPictureFile.name}`);
+            }
+
+            await db.collection('conversations').add({
+                type: 'group',
+                group_name: groupName,
+                participants: participants,
+                admins: [currentUser.email],
+                group_picture: groupPictureUrl,
+                created_date: new Date().toISOString(),
+                lastMessage: '',
+                unreadBy: []
+            });
+
+            showToast('Group created! 👥');
+            closeGroupModal();
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function showGroupMembers() {
+        if (!currentGroupChat) return;
+
+        const list = document.getElementById('membersModalList');
+        const isAdmin = currentGroupChat.admins && currentGroupChat.admins.includes(currentUser.email);
+
+        list.innerHTML = currentGroupChat.participants.map(email => {
+            const user = users.find(u => u.email === email) || { full_name: 'User', profile_picture: '' };
+            const isMemberAdmin = currentGroupChat.admins && currentGroupChat.admins.includes(email);
+            const canRemove = isAdmin && email !== currentUser.email;
+
+            return `
+                <div class="member-item">
+                    <img src="${user.profile_picture}" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">${user.full_name}</div>
+                        <div class="member-role">${isMemberAdmin ? '👑 Admin' : 'Member'}</div>
+                    </div>
+                    ${canRemove ? `<button class="remove-member-btn" onclick="removeMember('${email}')">Remove</button>` : ''}
+                </div>
+            `;
+        }).join('');
+
+        document.getElementById('membersModal').classList.add('active');
+    }
+
+    function closeMembersModal() {
+        document.getElementById('membersModal').classList.remove('active');
+    }
+
+    async function removeMember(email) {
+        if (!confirm('Remove?')) return;
+        try {
+            await db.collection('conversations').doc(currentGroupChat.id).update({
+                participants: firebase.firestore.FieldValue.arrayRemove(email)
+            });
+            showToast('Removed!');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    async function deleteCurrentGroup() {
+        if (!currentGroupChat || !confirm('Delete group?')) return;
+        try {
+            await db.collection('conversations').doc(currentGroupChat.id).delete();
+            showToast('Deleted!');
+            closeMembersModal();
+            navigateTo('conversations');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function updateHeaderUI() {
+        const icon = document.getElementById('headerProfileIcon');
+        if (currentUser && currentUser.profile_picture) {
+            icon.src = currentUser.profile_picture;
+            icon.style.display = 'block';
+        } else {
+            icon.style.display = 'none';
+        }
+    }
+
+    function updateNavButtons() {
+        document.getElementById('feedNavBtn').classList.remove('active');
+        document.getElementById('musicNavBtn').classList.remove('active');
+        document.getElementById('createNavBtn').classList.remove('active');
+
+        if (currentPage === 'feed') document.getElementById('feedNavBtn').classList.add('active');
+        else if (currentPage === 'music') document.getElementById('musicNavBtn').classList.add('active');
+        else if (currentPage === 'create') document.getElementById('createNavBtn').classList.add('active');
+    }
+
+    function navigateTo(page) {
+        currentPage = page;
+
+        document.getElementById('feedPage').classList.add('hidden');
+        document.getElementById('musicPage').classList.add('hidden');
+        document.getElementById('createPage').classList.add('hidden');
+        document.getElementById('profilePage').classList.add('hidden');
+        document.getElementById('usersPage').classList.add('hidden');
+        document.getElementById('conversationsPage').classList.add('hidden');
+        document.getElementById('messengerPage').classList.add('hidden');
+        document.getElementById('adminPage').classList.add('hidden');
+
+        const bottomNav = document.getElementById('bottomNav');
+        bottomNav.classList.toggle('hidden-nav', page !== 'feed');
+
+        updateNavButtons();
+
+        if (page === 'feed') {
+            document.getElementById('feedPage').classList.remove('hidden');
+            renderPosts();
+            loadStoriesOnDemand();
+        } else if (page === 'music') {
+            document.getElementById('musicPage').classList.remove('hidden');
+            loadMusicOnDemand();
+        } else if (page === 'create') {
+            document.getElementById('createPage').classList.remove('hidden');
+        } else if (page === 'profile') {
+            document.getElementById('profilePage').classList.remove('hidden');
+        } else if (page === 'users') {
+            document.getElementById('usersPage').classList.remove('hidden');
+            loadUsersOnDemand();
+        } else if (page === 'conversations') {
+            document.getElementById('conversationsPage').classList.remove('hidden');
+            loadConversationsOnDemand();
+        } else if (page === 'messenger') {
+            document.getElementById('messengerPage').classList.remove('hidden');
+            loadMessages();
+        } else if (page === 'admin') {
+            if (!isAdminAuthenticated) {
+                openAdminModal();
+                return;
+            }
+            document.getElementById('adminPage').classList.remove('hidden');
+            loadAdminData();
+        }
+    }
+
+    function loadStoriesOnDemand() {
+        if (!storiesListener) {
+            storiesListener = db.collection('posts')
+                .where('is_story', '==', true)
+                .orderBy('created_date', 'desc')
+                .limit(10)
+                .onSnapshot(snapshot => {
+                    const fireStories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    stories = fireStories.length > 0 ? [...fireStories, ...DEFAULT_STORIES] : DEFAULT_STORIES;
+                    renderStories();
+                });
+        }
+    }
+
+    function loadMusicOnDemand() {
+        if (!musicListener) {
+            musicListener = db.collection('posts')
+                .where('is_music', '==', true)
+                .orderBy('created_date', 'desc')
+                .limit(20)
+                .onSnapshot(snapshot => {
+                    musicPosts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderMusicFeed();
+                });
+        } else {
+            renderMusicFeed();
+        }
+    }
+
+    function loadUsersOnDemand() {
+        db.collection('users')
+            .limit(30)
+            .get()
+            .then(snapshot => {
+                const fireUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                users = fireUsers.length > 0 ? [...fireUsers, ...DEFAULT_USERS] : DEFAULT_USERS;
+                renderUsers();
+            });
+    }
+
+    function loadConversationsOnDemand() {
+        if (!currentUser) return;
+
+        db.collection('conversations')
+            .where('participants', 'array-contains', currentUser.email)
+            .orderBy('created_date', 'desc')
+            .limit(20)
+            .onSnapshot(snapshot => {
+                conversations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                updateMessengerBadge();
+                renderConversations();
+            });
+    }
+
+    function loadAdminData() {
+        if (!adsListener) {
+            adsListener = db.collection('posts')
+                .where('is_ad', '==', true)
+                .orderBy('created_date', 'desc')
+                .onSnapshot(snapshot => {
+                    ads = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderAdminPanel();
+                });
+        }
+
+        db.collection('users').limit(50).get().then(snapshot => {
+            const fireUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            users = [...fireUsers, ...DEFAULT_USERS];
+            renderAdminPanel();
+        });
+
+        db.collection('posts')
+            .orderBy('created_date', 'desc')
+            .limit(50)
+            .get()
+            .then(snapshot => {
+                posts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(p => !p.is_music && !p.is_ad && !p.is_story && !p.is_reel);
+                renderAdminPanel();
+            });
+    }
+
+    function updateMessengerBadge() {
+        const unreadCount = conversations.filter(c => c.unreadBy && c.unreadBy.includes(currentUser.email)).length;
+        const badge = document.getElementById('messengerBadge');
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount > 10 ? '10+' : unreadCount;
+            badge.style.display = 'block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    async function loadOnePost() {
+        if (isLoadingPost) return;
+        isLoadingPost = true;
+
+        try {
+            if (searchQuery) {
+                // Search mode - load all matching
+                if (currentPostIndex === 0) {
+                    const allPosts = DEFAULT_POSTS.filter(p => 
+                        p.caption.toLowerCase().includes(searchQuery) ||
+                        p.hashtags?.some(h => h.toLowerCase().includes(searchQuery))
+                    );
+                    allPosts.forEach(p => renderSinglePost(p));
+                }
+            } else if (activeHashtag) {
+                // Hashtag filter
+                if (currentPostIndex === 0) {
+                    const filtered = DEFAULT_POSTS.filter(p => p.hashtags?.includes(activeHashtag));
+                    filtered.forEach(p => renderSinglePost(p));
+                }
+            } else {
+                // Normal loading - one by one
+                if (currentPostIndex < DEFAULT_POSTS.length) {
+                    renderSinglePost(DEFAULT_POSTS[currentPostIndex]);
+                    currentPostIndex++;
+                } else if (!lastPostDoc) {
+                    // Try Firebase
+                    const snapshot = await db.collection('posts')
+                        .where('is_music', '==', false)
+                        .where('is_ad', '==', false)
+                        .where('is_story', '==', false)
+                        .where('is_reel', '==', false)
+                        .orderBy('created_date', 'desc')
+                        .limit(1)
+                        .get();
+
+                    if (!snapshot.empty) {
+                        const post = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
+                        renderSinglePost(post);
+                        lastPostDoc = snapshot.docs[0];
+                    }
+                } else {
+                    // Load next from Firebase
+                    const snapshot = await db.collection('posts')
+                        .where('is_music', '==', false)
+                        .where('is_ad', '==', false)
+                        .where('is_story', '==', false)
+                        .where('is_reel', '==', false)
+                        .orderBy('created_date', 'desc')
+                        .startAfter(lastPostDoc)
+                        .limit(1)
+                        .get();
+
+                    if (!snapshot.empty) {
+                        const post = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
+                        renderSinglePost(post);
+                        lastPostDoc = snapshot.docs[0];
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading post:', error);
+        }
+
+        isLoadingPost = false;
+    }
+
+    function renderPosts() {
+        const container = document.getElementById('postsFeed');
+        container.innerHTML = '<div style="text-align:center;padding:2rem;"><div class="loading"></div></div>';
+
+        currentPostIndex = 0;
+        lastPostDoc = null;
+        
+        setTimeout(() => {
+            container.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                loadOnePost();
+            }
+        }, 300);
+    }
+
+    function renderSinglePost(post) {
+        const container = document.getElementById('postsFeed');
+        const user = users.find(u => u.email === post.created_by) || { full_name: 'User', profile_picture: '', verified: false };
+
+        const postCard = document.createElement('div');
+        postCard.style.cssText = 'margin-bottom:1.5rem;background:white;border-radius:1rem;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);';
+
+        const verifyBadge = getVerificationBadge(user);
+
+        let captionHTML = '';
+        if (post.caption) {
+            const isLong = post.caption.length > 100;
+            const shortText = isLong ? post.caption.substring(0, 100) : post.caption;
+            captionHTML = `
+                <div style="padding:0 1rem;margin:0.75rem 0;">
+                    <span id="caption-short-${post.id}" style="font-size:0.9375rem;line-height:1.5;">${linkify(shortText)}</span>
+                    ${isLong ? `
+                        <span id="caption-full-${post.id}" style="display:none;font-size:0.9375rem;line-height:1.5;">${linkify(post.caption)}</span>
+                        <span onclick="toggleCaption('${post.id}')" style="color:#3b82f6;cursor:pointer;font-weight:600;margin-left:0.25rem;" id="read-more-${post.id}">...more</span>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        const hashtagsHTML = post.hashtags?.length > 0 ? 
+            `<div style="padding:0 1rem;margin-bottom:0.75rem;display:flex;flex-wrap:wrap;gap:0.5rem;">${post.hashtags.map(tag => `<span style="color:#3b82f6;font-size:0.875rem;font-weight:600;cursor:pointer;" onclick="filterByHashtag('${tag}')">#${tag}</span>`).join('')}</div>` : '';
+
+        postCard.innerHTML = `
+            <div style="padding:1rem;display:flex;justify-content:space-between;align-items:center;">
+                <div style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;" onclick="viewProfile('${user.email}')">
+                    <img src="${user.profile_picture}" style="width:40px;height:40px;border-radius:50%;" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name)}&size=40&background=000&color=fff'">
+                    <div>
+                        <div style="font-weight:600;font-size:0.9375rem;display:flex;align-items:center;">
+                            ${user.full_name}${verifyBadge}
+                        </div>
+                        <div style="font-size:0.8125rem;color:#6b7280;">${new Date(post.created_date).toLocaleDateString()}</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.8125rem;color:#6b7280;">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#3b82f6" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>${formatCount(post.views_count || 0)}</span>
+                </div>
+            </div>
+            
+            ${captionHTML}
+            
+            <div style="position:relative;background:#f3f4f6;">
+                <img data-src="${post.content_urls?.[0]}" class="lazy-image" style="width:100%;min-height:300px;object-fit:cover;background:#e5e7eb;cursor:pointer;" onclick="openLightbox('${post.content_urls?.[0]}', 'image')">
+            </div>
+            
+            ${hashtagsHTML}
+            
+            <div style="padding:1rem;display:flex;align-items:center;gap:1.5rem;">
+                <div onclick="likePost('${post.id}')" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                    <svg style="width:26px;height:26px;" viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+                        <defs>
+                            <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#3b82f6"/>
+                                <stop offset="100%" style="stop-color:#ef4444"/>
+                            </linearGradient>
+                        </defs>
+                        <path stroke="url(#heartGrad)" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    <span style="font-weight:700;font-size:0.9375rem;">${formatCount(post.likes_count || 0)}</span>
+                </div>
+                
+                <div onclick="openPostModal('${post.id}')" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                    <svg style="width:26px;height:26px;" viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+                        <defs>
+                            <linearGradient id="commentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#3b82f6"/>
+                                <stop offset="100%" style="stop-color:#ef4444"/>
+                            </linearGradient>
+                        </defs>
+                        <path stroke="url(#commentGrad)" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span style="font-weight:700;font-size:0.9375rem;">${formatCount(post.comments_count || 0)}</span>
+                </div>
+                
+                <div onclick="shareToMessenger('${post.id}')" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                    <svg style="width:26px;height:26px;" viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+                        <defs>
+                            <linearGradient id="shareGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#3b82f6"/>
+                                <stop offset="100%" style="stop-color:#ef4444"/>
+                            </linearGradient>
+                        </defs>
+                        <path stroke="url(#shareGrad)" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                    </svg>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(postCard);
+        lazyLoadImage(postCard.querySelector('.lazy-image'));
+    }
+
+    function lazyLoadImage(img) {
+        if (!img) return;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const image = entry.target;
+                    const src = image.getAttribute('data-src');
+                    if (src) {
+                        image.src = src;
+                        image.style.minHeight = 'auto';
+                    }
+                    observer.unobserve(image);
+                }
+            });
+        }, { rootMargin: '300px' });
+        observer.observe(img);
+    }
+
+    function toggleCaption(postId) {
+        const short = document.getElementById(`caption-short-${postId}`);
+        const full = document.getElementById(`caption-full-${postId}`);
+        const btn = document.getElementById(`read-more-${postId}`);
+
+        if (short.style.display === 'none') {
+            short.style.display = 'inline';
+            full.style.display = 'none';
+            btn.textContent = '...more';
+        } else {
+            short.style.display = 'none';
+            full.style.display = 'inline';
+            btn.textContent = 'less';
+        }
+    }
+
+    function shareToMessenger(postId) {
+        navigateTo('conversations');
+        showToast('Select conversation to share');
+    }
+
+    function filterByHashtag(tag) {
+        activeHashtag = activeHashtag === tag ? null : tag;
+        posts = [];
+        currentPostIndex = 0;
+        renderPosts();
+    }
+
+    function setStoryMode(mode) {
+        storyMode = mode;
+        document.getElementById('storyMediaBtn').classList.toggle('active', mode === 'media');
+        document.getElementById('storyTextBtn').classList.toggle('active', mode === 'text');
+        document.getElementById('storyMediaMode').style.display = mode === 'media' ? 'block' : 'none';
+        document.getElementById('storyTextMode').style.display = mode === 'text' ? 'block' : 'none';
+    }
+
+    function openStoryModal() {
+        document.getElementById('storyModal').classList.add('active');
+        storyMedia = null;
+        document.getElementById('storyPreview').innerHTML = '';
+        document.getElementById('storyTextInput').value = '';
+        setStoryMode('text');
+    }
+
+    function closeStoryModal() {
+        document.getElementById('storyModal').classList.remove('active');
+    }
+
+    function handleStoryMedia(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.size > 20 * 1024 * 1024) {
+            showToast('File too large! Max 20MB', 'error');
+            return;
+        }
+
+        storyMedia = file;
+        const url = URL.createObjectURL(file);
+        const preview = document.getElementById('storyPreview');
+
+        if (file.type.startsWith('video/')) {
+            preview.innerHTML = `<video src="${url}" controls style="width:100%;max-height:300px;border-radius:0.75rem;"></video>`;
+        } else {
+            preview.innerHTML = `<img src="${url}" style="width:100%;max-height:300px;object-fit:cover;border-radius:0.75rem;">`;
+        }
+    }
+
+    async function publishStory() {
+        if (storyMode === 'text') {
+            const text = document.getElementById('storyTextInput').value.trim();
+            const bgColor = document.getElementById('storyBgColor').value;
+
+            if (!text) {
+                showToast('Write something!', 'error');
+                return;
+            }
+
+            try {
+                const initialViews = Math.floor(Math.random() * 999652) + 350;
+                await db.collection('posts').add({
+                    is_story: true,
+                    content_type: 'text',
+                    text_content: text,
+                    background_color: bgColor,
+                    views_count: initialViews,
+                    created_date: new Date().toISOString(),
+                    created_by: currentUser.email,
+                    expires_at: new Date(Date.now() + 86400000).toISOString()
+                });
+
+                showToast(`✅ Story published! ${formatCount(initialViews)} views!`);
+                closeStoryModal();
+            } catch (error) {
+                showToast('Error', 'error');
+            }
+        } else {
+            if (!storyMedia) {
+                showToast('Select media!', 'error');
+                return;
+            }
+
+            try {
+                showToast('Publishing...', 'success');
+                const isVideo = storyMedia.type.startsWith('video/');
+                const mediaUrl = isVideo ? await uploadToStorage(storyMedia, `stories/${Date.now()}_${storyMedia.name}`) : await compressImage(storyMedia, 1200, 0.85);
+                const initialViews = Math.floor(Math.random() * 999652) + 350;
+
+                await db.collection('posts').add({
+                    is_story: true,
+                    content_url: mediaUrl,
+                    content_type: isVideo ? 'video' : 'image',
+                    views_count: initialViews,
+                    created_date: new Date().toISOString(),
+                    created_by: currentUser.email,
+                    expires_at: new Date(Date.now() + 86400000).toISOString()
+                });
+
+                showToast(`✅ Published! ${formatCount(initialViews)} views!`);
+                closeStoryModal();
+            } catch (error) {
+                showToast('Error', 'error');
+            }
+        }
+    }
+
+    function renderStories() {
+        const container = document.getElementById('storiesContainer');
+        const userStories = stories.filter(s => s.created_by === currentUser.email);
+        const otherStories = stories.filter(s => s.created_by !== currentUser.email);
+
+        const grouped = {};
+        otherStories.forEach(story => {
+            if (!grouped[story.created_by]) grouped[story.created_by] = [];
+            grouped[story.created_by].push(story);
+        });
+
+        let html = `
+            <div class="story-circle add" onclick="openStoryModal()">
+                <div class="story-circle-img">
+                    <svg style="width:32px;height:32px;stroke:#6b7280;" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+                <div class="story-circle-name">Add</div>
+            </div>
+        `;
+
+        if (userStories.length > 0) {
+            const storyImg = userStories[0].content_type === 'image' ? userStories[0].content_url : currentUser.profile_picture;
+            html += `
+                <div class="story-circle" onclick="viewStory('${currentUser.email}')">
+                    <img src="${storyImg}" class="story-circle-img" onerror="this.src='${currentUser.profile_picture}'">
+                    <div class="story-circle-name">You</div>
+                </div>
+            `;
+        }
+
+        Object.keys(grouped).forEach(email => {
+            const user = users.find(u => u.email === email) || { full_name: 'User', profile_picture: '' };
+            const storyImg = grouped[email][0].content_type === 'image' ? grouped[email][0].content_url : user.profile_picture;
+            html += `
+                <div class="story-circle" onclick="viewStory('${email}')">
+                    <img src="${storyImg}" class="story-circle-img" onerror="this.src='${user.profile_picture}'">
+                    <div class="story-circle-name">${user.full_name.split(' ')[0]}</div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    function viewStory(email) {
+        const userStories = stories.filter(s => s.created_by === email);
+        if (userStories.length === 0) return;
+
+        const modal = document.createElement('div');
+        modal.className = 'lightbox-overlay active';
+        modal.style.background = 'rgba(0,0,0,0.95)';
+        modal.innerHTML = `
+            <div class="lightbox-content">
+                <div id="storyContent" style="position:relative;max-width:500px;width:100%;max-height:90vh;background:#000;border-radius:1.5rem;overflow:hidden;"></div>
+                <button class="lightbox-close" onclick="this.closest('.lightbox-overlay').remove()">×</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        const story = userStories[0];
+        const user = users.find(u => u.email === email) || { full_name: 'User', profile_picture: '' };
+
+        let mediaHTML = '';
+        if (story.content_type === 'text') {
+            mediaHTML = `<div style="width:100%;height:70vh;display:flex;align-items:center;justify-content:center;background:${story.background_color};padding:2rem;"><p style="color:white;font-size:1.5rem;font-weight:bold;text-align:center;">${story.text_content}</p></div>`;
+        } else if (story.content_type === 'video') {
+            mediaHTML = `<video src="${story.content_url}" style="width:100%;max-height:70vh;" controls autoplay></video>`;
+        } else {
+            mediaHTML = `<img src="${story.content_url}" style="width:100%;max-height:70vh;object-fit:contain;">`;
+        }
+
+        const verifyBadge = getVerificationBadge(user);
+
+        document.getElementById('storyContent').innerHTML = `
+            <div style="position:absolute;top:1rem;left:1rem;right:1rem;display:flex;justify-content:space-between;z-index:10;">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <img src="${user.profile_picture}" style="width:32px;height:32px;border-radius:50%;border:2px solid white;">
+                    <span style="color:white;font-weight:600;font-size:0.875rem;display:flex;align-items:center;">${user.full_name}${verifyBadge}</span>
+                </div>
+                ${email === currentUser.email && !story.id.startsWith('ds') ? `<button onclick="deleteStory('${story.id}')" style="background:#dc2626;color:white;border:none;padding:0.5rem 1rem;border-radius:0.5rem;font-weight:600;cursor:pointer;">Delete</button>` : ''}
+            </div>
+            ${mediaHTML}
+            <div style="padding:1rem;background:white;">
+                <div style="font-size:0.875rem;color:#6b7280;">👁️ ${formatCount(story.views_count)} views</div>
+            </div>
+        `;
+    }
+
+    async function deleteStory(storyId) {
+        if (!confirm('Delete?')) return;
+        try {
+            await db.collection('posts').doc(storyId).delete();
+            showToast('Deleted!');
+            document.querySelector('.lightbox-overlay.active')?.remove();
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function openAudioModal() {
+        document.getElementById('audioModal').classList.add('active');
+        audioFile = null;
+        audioArt = null;
+        document.getElementById('audioTitle').value = '';
+        document.getElementById('audioArtPreview').innerHTML = '';
+    }
+
+    function closeAudioModal() {
+        document.getElementById('audioModal').classList.remove('active');
+    }
+
+    function handleAudioFile(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.size > 20 * 1024 * 1024) {
+            showToast('File too large!', 'error');
+            return;
+        }
+        audioFile = file;
+        showToast('Audio selected! 🎵');
+    }
+
+    function handleAudioArt(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        audioArt = file;
+        const url = URL.createObjectURL(file);
+        document.getElementById('audioArtPreview').innerHTML = `<img src="${url}" style="width:120px;height:120px;object-fit:cover;border-radius:0.75rem;">`;
+    }
+
+    async function uploadToStorage(file, path) {
+        const storageRef = storage.ref();
+        const fileRef = storageRef.child(path);
+        const snapshot = await fileRef.put(file);
+        return await snapshot.ref.getDownloadURL();
+    }
+
+    async function publishMusic() {
+        const title = document.getElementById('audioTitle').value.trim();
+
+        if (!audioFile || !audioArt || !title) {
+            showToast('Fill all fields!', 'error');
+            return;
+        }
+
+        try {
+            showToast('Publishing... 🎵', 'success');
+            const audioUrl = await uploadToStorage(audioFile, `music/${Date.now()}_${audioFile.name}`);
+            const artUrl = await compressImage(audioArt, 800, 0.85);
+            const initialViews = Math.floor(Math.random() * 241145) + 2399;
+
+            await db.collection('posts').add({
+                is_music: true,
+                title: title,
+                audio_url: audioUrl,
+                album_art: artUrl,
+                views_count: initialViews,
+                likes_count: Math.floor(initialViews * 0.2),
+                likedBy: [],
+                comments_enabled: true,
+                comments_count: 0,
+                created_date: new Date().toISOString(),
+                created_by: currentUser.email
+            });
+
+            showToast(`✅ Published!`);
+            closeAudioModal();
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function renderMusicFeed() {
+        const container = document.getElementById('musicFeed');
+
+        if (musicPosts.length === 0) {
+            container.innerHTML = `<div class="empty-state"><h3>No music yet 🎵</h3></div>`;
+            return;
+        }
+
+        container.innerHTML = musicPosts.map(music => {
+            const user = users.find(u => u.email === music.created_by) || { full_name: 'Artist', profile_picture: '' };
+            const verifyBadge = getVerificationBadge(user);
+
+            return `
+                <div class="post-card" style="margin-bottom:1.5rem;">
+                    <div style="padding:1rem;">
+                        <img src="${music.album_art}" style="width:100%;height:200px;object-fit:cover;border-radius:0.75rem;margin-bottom:1rem;">
+                        <div style="font-weight:700;font-size:1.125rem;margin-bottom:0.5rem;">${music.title}</div>
+                        <div style="font-size:0.875rem;color:#6b7280;display:flex;align-items:center;">${user.full_name}${verifyBadge}</div>
+                        <button onclick="toggleAudio('${music.id}', '${music.audio_url}')" style="width:100%;margin-top:1rem;padding:0.75rem;background:#000;color:white;border:none;border-radius:0.5rem;font-weight:600;cursor:pointer;">
+                            <span id="playIcon${music.id}">▶️ Play</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function toggleAudio(musicId, audioUrl) {
+        const audioElement = document.getElementById('audioPlayer') || createAudioPlayer();
+        const playIcon = document.getElementById('playIcon' + musicId);
+
+        if (currentAudioPlaying === musicId) {
+            if (audioElement.paused) {
+                audioElement.play();
+                playIcon.textContent = '⏸️ Pause';
+            } else {
+                audioElement.pause();
+                playIcon.textContent = '▶️ Play';
+            }
+        } else {
+            if (currentAudioPlaying) {
+                const oldIcon = document.getElementById('playIcon' + currentAudioPlaying);
+                if (oldIcon) oldIcon.textContent = '▶️ Play';
+            }
+
+            audioElement.src = audioUrl;
+            audioElement.play();
+            currentAudioPlaying = musicId;
+            playIcon.textContent = '⏸️ Pause';
+
+            audioElement.onended = () => {
+                playIcon.textContent = '▶️ Play';
+                currentAudioPlaying = null;
+            };
+        }
+    }
+
+    function createAudioPlayer() {
+        const audio = document.createElement('audio');
+        audio.id = 'audioPlayer';
+        audio.style.display = 'none';
+        document.body.appendChild(audio);
+        return audio;
+    }
+
+    function selectAudioForPost(musicId, title, artist) {
+        selectedAudio = { musicId, title, artist };
+        document.getElementById('selectedAudioDisplay').style.display = 'block';
+        document.getElementById('selectedAudioName').textContent = `${title} - ${artist}`;
+        navigateTo('create');
+        showToast('Audio selected! 🎵');
+    }
+
+    function removeSelectedAudio() {
+        selectedAudio = null;
+        document.getElementById('selectedAudioDisplay').style.display = 'none';
+    }
+
+    function openAI() {
+        document.getElementById('aiModal').classList.add('active');
+        if (aiMessages.length === 0) {
+            aiMessages.push({role: 'ai', text: `Hi ${currentUser.full_name}! 👋 How can I help?`});
+        }
+        renderAIChat();
+    }
+
+    function closeAI() {
+        document.getElementById('aiModal').classList.remove('active');
+    }
+
+    function renderAIChat() {
+        const container = document.getElementById('aiChat');
+        container.innerHTML = aiMessages.map(msg => `<div class="ai-message ${msg.role}">${msg.text}</div>`).join('');
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function handleAIImage(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        aiImageFile = file;
+        const url = URL.createObjectURL(file);
+        document.getElementById('aiImagePreviewArea').innerHTML = `<img src="${url}" style="max-width:150px;border-radius:0.75rem;">`;
+    }
+
+    function removeAIImage() {
+        aiImageFile = null;
+        document.getElementById('aiImagePreviewArea').innerHTML = '';
+    }
+
+    async function sendAIMessage() {
+        const input = document.getElementById('aiInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        aiMessages.push({ role: 'user', text: text });
+        input.value = '';
+        renderAIChat();
+
+        setTimeout(() => {
+            aiMessages.push({ role: 'ai', text: "I'm X AI! In the full version I can help with images, math, and questions. 🚀" });
+            renderAIChat();
+        }, 1000);
+    }
+
+    function openMarket() {
+        document.getElementById('marketModal').classList.add('active');
+        loadMarketOnDemand();
+        setMarketMode('view');
+    }
+
+    function closeMarket() {
+        document.getElementById('marketModal').classList.remove('active');
+    }
+
+    function loadMarketOnDemand() {
+        db.collection('market')
+            .orderBy('created_date', 'desc')
+            .limit(20)
+            .get()
+            .then(snapshot => {
+                marketItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                if (marketMode === 'view' || marketMode === 'buy') renderMarketItems();
+            });
+    }
+
+    function setMarketMode(mode) {
+        marketMode = mode;
+        document.getElementById('marketViewBtn').classList.toggle('active', mode === 'view');
+        document.getElementById('marketBuyBtn').classList.toggle('active', mode === 'buy');
+        document.getElementById('marketSellBtn').classList.toggle('active', mode === 'sell');
+
+        if (mode === 'sell') {
+            renderSellForm();
+        } else {
+            renderMarketItems();
+        }
+    }
+
+    function renderMarketItems() {
+        const container = document.getElementById('marketContent');
+        const searchQuery = document.getElementById('marketSearch').value.toLowerCase();
+        let filtered = [...marketItems, ...DEFAULT_MARKET_ITEMS];
+
+        if (marketMode === 'buy') filtered = filtered.filter(item => item.created_by !== currentUser.email);
+        if (searchQuery) {
+            filtered = filtered.filter(item =>
+                (item.name && item.name.toLowerCase().includes(searchQuery)) ||
+                (item.location && item.location.toLowerCase().includes(searchQuery))
+            );
+        }
+
+        if (filtered.length === 0) {
+            container.innerHTML = `<div class="empty-state"><h3>No items 🔍</h3></div>`;
+            return;
+        }
+
+        container.innerHTML = `<div class="market-grid">${filtered.map(item => `
+            <div class="market-item">
+                <img src="${item.image_url}" class="market-item-image" onclick="openLightbox('${item.image_url}', 'image')">
+                <div class="market-item-content">
+                    <div class="market-item-name">${item.name}</div>
+                    <p style="font-size:0.875rem;color:#374151;margin:0.5rem 0;">${item.description || ''}</p>
+                    <div style="font-size:0.875rem;color:#6b7280;">📍 ${item.location}</div>
+                    ${item.whatsapp ? `<a href__="https://wa.me/${item.whatsapp.replace(/[^0-9]/g, '')}" target="_blank" style="display:inline-block;margin-top:0.5rem;padding:0.5rem 1rem;background:#25D366;color:white;border-radius:0.5rem;text-decoration:none;">💬 WhatsApp</a>` : ''}
+                </div>
+            </div>
+        `).join('')}</div>`;
+    }
+
+    function renderSellForm() {
+        document.getElementById('marketContent').innerHTML = `
+            <div class="create-form">
+                <input type="text" id="itemName" class="admin-input" placeholder="Item Name" style="background:white;">
+                <textarea id="itemDescription" class="admin-input" placeholder="Description" rows="3" style="background:white;"></textarea>
+                <input type="text" id="itemLocation" class="admin-input" placeholder="Location" style="background:white;">
+                <input type="text" id="itemWhatsApp" class="admin-input" placeholder="WhatsApp" style="background:white;">
+                <input type="file" id="itemImageInput" accept="image/*" style="display:none;">
+                <button class="file-upload-btn" onclick="document.getElementById('itemImageInput').click()" style="background:white;">Upload Photo</button>
+                <div id="itemImagePreview"></div>
+                <button class="submit-btn" onclick="publishMarketItem()">Publish 🚀</button>
+            </div>
+        `;
+
+        document.getElementById('itemImageInput').onchange = function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                document.getElementById('itemImagePreview').innerHTML = `<img src="${url}" style="width:100%;max-height:200px;object-fit:cover;border-radius:0.75rem;margin:1rem 0;">`;
+            }
+        };
+    }
+
+    async function publishMarketItem() {
+        const name = document.getElementById('itemName').value.trim();
+        const description = document.getElementById('itemDescription').value.trim();
+        const location = document.getElementById('itemLocation').value.trim();
+        const whatsapp = document.getElementById('itemWhatsApp').value.trim();
+        const imageFile = document.getElementById('itemImageInput').files[0];
+
+        if (!name || !location || !imageFile) {
+            showToast('Fill required fields!', 'error');
+            return;
+        }
+
+        try {
+            showToast('Publishing...', 'success');
+            const imageUrl = await compressImage(imageFile, 1200, 0.85);
+
+            await db.collection('market').add({
+                name,
+                description,
+                location,
+                whatsapp,
+                image_url: imageUrl,
+                created_date: new Date().toISOString(),
+                created_by: currentUser.email
+            });
+
+            showToast('✅ Published!');
+            setMarketMode('view');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function openPromote() {
+        document.getElementById('promoteModal').classList.add('active');
+    }
+
+    function closePromote() {
+        document.getElementById('promoteModal').classList.remove('active');
+    }
+
+    function handlePromoteMedia(e) {
+        const files = Array.from(e.target.files);
+        promoteMedia = [];
+
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                promoteMedia.push(ev.target.result);
+                document.getElementById('promoteMediaPreview').innerHTML = promoteMedia.map(url =>
+                    `<img src="${url}" style="width:100px;height:100px;object-fit:cover;border-radius:0.75rem;display:inline-block;margin:0.25rem;">`
+                ).join('');
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function confirmPromotion() {
+        document.getElementById('promoteForm').style.display = 'none';
+        document.getElementById('promotePayment').style.display = 'block';
+    }
+
+    async function startPromotion() {
+        showToast('✅ Request submitted!');
+        closePromote();
+    }
+
+    function openReels() {
+        document.getElementById('reelsModal').classList.add('active');
+        renderReels();
+    }
+
+    function closeReels() {
+        document.getElementById('reelsModal').classList.remove('active');
+    }
+
+    function uploadReel() {
+        document.getElementById('reelVideoInput').click();
+    }
+
+    async function handleReelUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            showToast('Uploading... 📹', 'success');
+            const videoUrl = await uploadToStorage(file, `reels/${Date.now()}_${file.name}`);
+
+            await db.collection('posts').add({
+                is_reel: true,
+                video_url: videoUrl,
+                caption: '',
+                views_count: Math.floor(Math.random() * 530865) + 12345,
+                likes_count: 0,
+                likedBy: [],
+                created_date: new Date().toISOString(),
+                created_by: currentUser.email
+            });
+
+            showToast('✅ Uploaded!');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function renderReels() {
+        const container = document.getElementById('reelsContent');
+
+        if (reels.length === 0) {
+            container.innerHTML = `<div class="empty-state" style="color:white;"><h3 style="color:white;">No reels 📹</h3></div>`;
+            return;
+        }
+
+        container.innerHTML = reels.map((reel, index) => {
+            const user = users.find(u => u.email === reel.created_by) || { full_name: 'Creator', profile_picture: '' };
+            const verifyBadge = getVerificationBadge(user);
+
+            return `
+                <div class="reel-item">
+                    <video src="${reel.video_url}" class="reel-video" ${index === 0 ? 'autoplay' : ''} loop playsinline></video>
+                    <div class="reel-overlay">
+                        <div class="reel-author" style="display:flex;align-items:center;">${user.full_name}${verifyBadge}</div>
+                        ${reel.caption ? `<div class="reel-caption">${reel.caption}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function openAdModal() {
+        document.getElementById('adModal').classList.add('active');
+        window.adMediaFiles = [];
+        document.getElementById('adMediaPreview').innerHTML = '';
+    }
+
+    function closeAdModal() {
+        document.getElementById('adModal').classList.remove('active');
+    }
+
+    function handleAdMedia(e) {
+        const files = Array.from(e.target.files);
+        window.adMediaFiles = [];
+
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                window.adMediaFiles.push(ev.target.result);
+                document.getElementById('adMediaPreview').innerHTML = window.adMediaFiles.map(url =>
+                    `<img src="${url}" style="width:100px;height:100px;object-fit:cover;border-radius:0.75rem;display:inline-block;margin:0.25rem;">`
+                ).join('');
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async function publishAd() {
+        const companyName = document.getElementById('adCompanyName').value.trim();
+        const caption = document.getElementById('adCaption').value.trim();
+
+        if (!companyName || !caption || !window.adMediaFiles || window.adMediaFiles.length === 0) {
+            showToast('Fill required fields!', 'error');
+            return;
+        }
+
+        try {
+            await db.collection('posts').add({
+                is_ad: true,
+                company_name: companyName,
+                caption,
+                content_urls: window.adMediaFiles,
+                views_count: Math.floor(Math.random() * 154766) + 545234,
+                likes_count: 0,
+                created_date: new Date().toISOString(),
+                created_by: currentUser.email
+            });
+
+            showToast('✅ Published!');
+            closeAdModal();
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function openVerifyModal() {
+        if (!currentUser) return;
+        document.getElementById('verifyModal').classList.add('active');
+        document.getElementById('verifyName').value = currentUser.full_name;
+        document.getElementById('verifyEmail').value = currentUser.email;
+        setVerifyType('blue');
+    }
+
+    function closeVerifyModal() {
+        document.getElementById('verifyModal').classList.remove('active');
+    }
+
+    function setVerifyType(type) {
+        verifyType = type;
+        document.getElementById('blueVerifyCheck').classList.toggle('checked', type === 'blue');
+        document.getElementById('blackVerifyCheck').classList.toggle('checked', type === 'black');
+        document.getElementById('verifyBusinessReg').style.display = type === 'black' ? 'block' : 'none';
+    }
+
+    async function submitVerifyRequest() {
+        showToast('✅ Request sent!');
+        closeVerifyModal();
+    }
+
+    function linkify(text) {
+        if (!text) return '';
+        const urlPattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*)/ig;
+        return text.replace(urlPattern, match => `<a href__="${match}" target="_blank" style="color:#3b82f6;">${match}</a>`);
+    }
+
+    async function openPostModal(postId) {
+        try {
+            currentViewPost = posts.find(p => p.id === postId) || DEFAULT_POSTS.find(p => p.id === postId);
+            if (!currentViewPost) return;
+
+            const user = users.find(u => u.email === currentViewPost.created_by) || { full_name: 'User', profile_picture: '' };
+            const verifyBadge = getVerificationBadge(user);
+
+            document.getElementById('postModalMedia').innerHTML = `<img src="${currentViewPost.content_urls?.[0]}" class="post-modal-image">`;
+            document.getElementById('postModalInfo').innerHTML = `
+                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+                    <img src="${user.profile_picture}" class="user-avatar">
+                    <div>
+                        <div class="user-name" style="display:flex;align-items:center;">${user.full_name}${verifyBadge}</div>
+                        <div class="user-email">${user.email}</div>
+                    </div>
+                </div>
+                ${currentViewPost.caption ? `<p>${linkify(currentViewPost.caption)}</p>` : ''}
+                <div style="margin-top:1rem;font-size:0.875rem;color:#6b7280;">
+                    <span>❤️ ${formatCount(currentViewPost.likes_count || 0)}</span>
+                    <span style="margin-left:1rem;">👁️ ${formatCount(currentViewPost.views_count || 0)}</span>
+                </div>
+            `;
+
+            document.getElementById('postModal').classList.add('active');
+            loadComments(postId);
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function closePostModal() {
+        document.getElementById('postModal').classList.remove('active');
+        if (commentUnsubscribe) {
+            commentUnsubscribe();
+            commentUnsubscribe = null;
+        }
+    }
+
+    async function loadComments(postId) {
+        try {
+            if (commentUnsubscribe) commentUnsubscribe();
+
+            commentUnsubscribe = db.collection('posts').doc(postId).collection('comments')
+                .orderBy('created_date', 'asc')
+                .limit(50)
+                .onSnapshot(snapshot => {
+                    currentComments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderComments();
+                });
+        } catch (error) {}
+    }
+
+    function renderComments() {
+        const container = document.getElementById('commentsSection');
+
+        if (currentComments.length === 0) {
+            container.innerHTML = `<div class="empty-state" style="padding:2rem;"><h3>No comments 💬</h3></div>`;
+            return;
+        }
+
+        container.innerHTML = currentComments.map(comment => {
+            const user = users.find(u => u.email === comment.created_by) || { full_name: 'User', profile_picture: '' };
+            const verifyBadge = getVerificationBadge(user);
+
+            return `
+                <div class="comment-item">
+                    <img src="${user.profile_picture}" class="comment-avatar">
+                    <div style="flex:1;">
+                        <div class="comment-author" style="display:flex;align-items:center;">${user.full_name}${verifyBadge}</div>
+                        <div class="comment-text">${linkify(comment.text)}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function handleCommentImage(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        commentImageFile = file;
+        const url = URL.createObjectURL(file);
+        document.getElementById('commentPreviewImg').src = url;
+        document.getElementById('commentImagePreview').style.display = 'block';
+    }
+
+    function removeCommentImage() {
+        commentImageFile = null;
+        document.getElementById('commentImagePreview').style.display = 'none';
+    }
+
+    async function submitComment() {
+        const text = document.getElementById('commentInput').value.trim();
+        if (!text && !commentImageFile) return;
+
+        try {
+            let imageUrl = null;
+            if (commentImageFile) {
+                imageUrl = await compressImage(commentImageFile, 800, 0.75);
+            }
+
+            await db.collection('posts').doc(currentViewPost.id).collection('comments').add({
+                text: text || '',
+                image_url: imageUrl,
+                created_by: currentUser.email,
+                created_date: new Date().toISOString()
+            });
+
+            document.getElementById('commentInput').value = '';
+            removeCommentImage();
+            showToast('💬 Comment added!');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function openLightbox(url, type) {
+        currentLightboxUrl = url;
+        const container = document.getElementById('lightboxMedia');
+        if (type === 'video') {
+            container.innerHTML = `<video src="${url}" class="lightbox-video" controls autoplay></video>`;
+        } else {
+            container.innerHTML = `<img src="${url}" class="lightbox-image">`;
+        }
+        document.getElementById('lightboxOverlay').classList.add('active');
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightboxOverlay').classList.remove('active');
+        const video = document.getElementById('lightboxMedia').querySelector('video');
+        if (video) video.pause();
+    }
+
+    function downloadMedia() {
+        if (!currentLightboxUrl) return;
+        const a = document.createElement('a');
+        a.href = currentLightboxUrl;
+        a.download = 'streamx-' + Date.now();
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('✅ Download started!');
+    }
+
+    async function likePost(postId) {
+        try {
+            const post = posts.find(p => p.id === postId) || DEFAULT_POSTS.find(p => p.id === postId);
+            if (!post || post.id.startsWith('dp')) return;
+
+            const likedBy = post.likedBy || [];
+
+            if (likedBy.includes(currentUser.email)) {
+                await db.collection('posts').doc(postId).update({
+                    likedBy: firebase.firestore.FieldValue.arrayRemove(currentUser.email),
+                    likes_count: firebase.firestore.FieldValue.increment(-1)
+                });
+            } else {
+                await db.collection('posts').doc(postId).update({
+                    likedBy: firebase.firestore.FieldValue.arrayUnion(currentUser.email),
+                    likes_count: firebase.firestore.FieldValue.increment(1)
+                });
+            }
+        } catch (error) {}
+    }
+
+    function handleFileSelect(e) {
+        uploadedFiles = Array.from(e.target.files).filter(f => f.size <= 20 * 1024 * 1024);
+        renderPreviews();
+    }
+
+    function renderPreviews() {
+        const container = document.getElementById('previewContainer');
+        if (uploadedFiles.length === 0) {
+            container.innerHTML = '';
+            return;
+        }
+
+        container.innerHTML = uploadedFiles.map((file, index) => {
+            const url = URL.createObjectURL(file);
+            return `
+                <div class="preview-item">
+                    <img src="${url}" class="preview-image">
+                    <button type="button" class="preview-remove" onclick="removePreview(${index})">×</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function removePreview(index) {
+        uploadedFiles.splice(index, 1);
+        renderPreviews();
+    }
+
+    function addHashtag() {
+        const input = document.getElementById('createHashtag');
+        const tag = input.value.trim().replace('#', '');
+        if (tag && !currentHashtags.includes(tag)) {
+            currentHashtags.push(tag);
+            renderHashtags();
+            input.value = '';
+        }
+    }
+
+    function renderHashtags() {
+        const container = document.getElementById('hashtagsList');
+        container.innerHTML = currentHashtags.map(tag =>
+            `<span style="background:#f3f4f6;padding:0.5rem 0.875rem;border-radius:9999px;font-size:0.875rem;font-weight:600;color:#3b82f6;">#${tag} <button onclick="removeHashtag('${tag}')" style="background:none;border:none;cursor:pointer;">×</button></span>`
+        ).join('');
+    }
+
+    function removeHashtag(tag) {
+        currentHashtags = currentHashtags.filter(t => t !== tag);
+        renderHashtags();
+    }
+
+    async function handleCreatePost(e) {
+        e.preventDefault();
+
+        const caption = document.getElementById('createCaption').value.trim();
+        const location = document.getElementById('createLocation').value.trim();
+
+        if (!caption && uploadedFiles.length === 0) {
+            showToast('Add caption or media!', 'error');
+            return;
+        }
+
+        document.getElementById('submitText').style.display = 'none';
+        document.getElementById('submitLoading').style.display = 'inline-block';
+
+        try {
+            const contentUrls = [];
+            for (let file of uploadedFiles) {
+                if (file.type.startsWith('video/')) {
+                    contentUrls.push(await uploadToStorage(file, `videos/${Date.now()}_${file.name}`));
+                } else {
+                    contentUrls.push(await compressImage(file, 1200, 0.85));
+                }
+            }
+
+            const initialViews = Math.floor(Math.random() * 241145) + 2399;
+
+            await db.collection('posts').add({
+                caption,
+                location,
+                hashtags: currentHashtags,
+                content_urls: contentUrls,
+                content_type: 'image',
+                views_count: initialViews,
+                likes_count: Math.floor(initialViews * 0.2),
+                likedBy: [],
+                comments_enabled: commentsEnabled,
+                comments_count: 0,
+                created_date: new Date().toISOString(),
+                created_by: currentUser.email
+            });
+
+            showToast(`✅ Posted!`);
+
+            document.getElementById('createCaption').value = '';
+            uploadedFiles = [];
+            currentHashtags = [];
+            renderPreviews();
+            renderHashtags();
+            navigateTo('feed');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+
+        document.getElementById('submitText').style.display = 'inline';
+        document.getElementById('submitLoading').style.display = 'none';
+    }
+
+    function compressImage(file, maxSize = 1200, quality = 0.85) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxSize || height > maxSize) {
+                        if (width > height) {
+                            height = (height * maxSize) / width;
+                            width = maxSize;
+                        } else {
+                            width = (width * maxSize) / height;
+                            height = maxSize;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', quality));
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async function deletePost(postId) {
+        if (!confirm('Delete?')) return;
+        try {
+            await db.collection('posts').doc(postId).delete();
+            showToast('Deleted!');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function viewProfile(email) {
+        const user = users.find(u => u.email === email);
+        if (user) {
+            renderProfile(user);
+            navigateTo('profile');
+        }
+    }
+
+    function renderProfile(user) {
+        const verifyBadge = getVerificationBadge(user);
+        document.getElementById('profileAvatar').src = user.profile_picture || '';
+        document.getElementById('profileName').textContent = user.full_name;
+        document.getElementById('profileVerifyBadge').innerHTML = verifyBadge;
+        document.getElementById('profileEmail').textContent = user.email;
+
+        const isOwnProfile = user.email === currentUser.email;
+        document.getElementById('editNameBtn').style.display = isOwnProfile ? 'block' : 'none';
+        document.getElementById('editBioBtn').style.display = isOwnProfile ? 'block' : 'none';
+        document.getElementById('editContactsBtn').style.display = isOwnProfile ? 'block' : 'none';
+        document.getElementById('profileCodeBox').style.display = isOwnProfile ? 'block' : 'none';
+        document.getElementById('profileResetCodeBox').style.display = isOwnProfile ? 'block' : 'none';
+        document.getElementById('profileChatBtn').style.display = isOwnProfile ? 'none' : 'block';
+        document.getElementById('profileSwitchBtn').style.display = isOwnProfile ? 'block' : 'none';
+
+        if (isOwnProfile) {
+            document.getElementById('profileAccessCode').textContent = user.accessCode || '------';
+            document.getElementById('profileResetCode').textContent = user.resetCode || 'r------';
+        } else {
+            window.startChat = function() {
+                currentChatUser = user;
+                currentGroupChat = null;
+                navigateTo('messenger');
+            };
+        }
+
+        document.getElementById('profileBio').textContent = user.bio || '';
+        document.getElementById('profileBio').style.display = user.bio ? 'block' : 'none';
+
+        const userPosts = posts.filter(p => p.created_by === user.email);
+        document.getElementById('profilePostCount').textContent = formatCount(userPosts.length);
+        document.getElementById('profileViewCount').textContent = formatCount(userPosts.reduce((sum, p) => sum + (p.views_count || 0), 0));
+        document.getElementById('profileLikeCount').textContent = formatCount(userPosts.reduce((sum, p) => sum + (p.likes_count || 0), 0));
+
+        document.getElementById('profilePosts').innerHTML = userPosts.length === 0 ? `<div class="empty-state"><h3>No posts</h3></div>` : '';
+    }
+
+    async function handleProfilePictureUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            showToast('Uploading...', 'success');
+            const compressed = await compressImage(file, 400, 0.8);
+
+            await db.collection('users').doc(currentUser.id).update({ profile_picture: compressed });
+            currentUser.profile_picture = compressed;
+            localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
+            updateHeaderUI();
+            renderProfile(currentUser);
+            showToast('✅ Updated!');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function renderUsers(search = '') {
+        const container = document.getElementById('usersList');
+        const quickAccessContainer = document.getElementById('usersQuickAccess');
+        let filtered = users.filter(u => u.email !== currentUser.email);
+
+        if (search) {
+            filtered = filtered.filter(u =>
+                u.full_name.toLowerCase().includes(search) ||
+                u.email.toLowerCase().includes(search)
+            );
+        }
+
+        quickAccessContainer.innerHTML = filtered.slice(0, 12).map(user => {
+            const verifyBadge = getVerificationBadge(user);
+            return `
+                <div class="user-quick-card" onclick="viewProfile('${user.email}')">
+                    <img src="${user.profile_picture}" class="user-quick-avatar">
+                    <div class="user-quick-name" style="display:flex;align-items:center;justify-content:center;">${user.full_name.split(' ')[0]}${verifyBadge}</div>
+                    <button class="user-quick-chat-btn" onclick="event.stopPropagation();startChatWith('${user.email}')">💬</button>
+                </div>
+            `;
+        }).join('');
+
+        container.innerHTML = filtered.map(user => {
+            const verifyBadge = getVerificationBadge(user);
+            return `
+                <div class="user-card" onclick="viewProfile('${user.email}')">
+                    <img src="${user.profile_picture}" class="user-card-avatar">
+                    <div class="user-card-info">
+                        <div class="user-card-name" style="display:flex;align-items:center;">${user.full_name}${verifyBadge}</div>
+                        <div class="user-card-email">${user.email}</div>
+                    </div>
+                    <button class="message-icon-btn" onclick="event.stopPropagation();startChatWith('${user.email}')">
+                        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function startChatWith(email) {
+        const user = users.find(u => u.email === email);
+        if (user) {
+            currentChatUser = user;
+            currentGroupChat = null;
+            navigateTo('messenger');
+        }
+    }
+
+    function renderConversations() {
+        const container = document.getElementById('conversationsList');
+
+        if (conversations.length === 0) {
+            container.innerHTML = `<div class="empty-state"><h3>No conversations</h3></div>`;
+            return;
+        }
+
+        container.innerHTML = conversations.map(conv => {
+            if (conv.type === 'group') {
+                return `
+                    <div class="conversation-card" onclick="openGroupConversation('${conv.id}')">
+                        <img src="${conv.group_picture}" class="conversation-avatar">
+                        <div class="conversation-info">
+                            <div class="conversation-name">${conv.group_name} 👥</div>
+                            <div class="conversation-last-message">${conv.lastMessage || 'No messages'}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const otherEmail = conv.participants.find(p => p !== currentUser.email);
+            const otherUser = users.find(u => u.email === otherEmail) || { full_name: 'User', profile_picture: '' };
+            const verifyBadge = getVerificationBadge(otherUser);
+
+            return `
+                <div class="conversation-card" onclick="openConversation('${otherUser.email}')">
+                    <img src="${otherUser.profile_picture}" class="conversation-avatar">
+                    <div class="conversation-info">
+                        <div class="conversation-name" style="display:flex;align-items:center;">${otherUser.full_name}${verifyBadge}</div>
+                        <div class="conversation-last-message">${conv.lastMessage || 'No messages'}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function openConversation(email) {
+        const user = users.find(u => u.email === email);
+        if (user) {
+            currentChatUser = user;
+            currentGroupChat = null;
+            navigateTo('messenger');
+        }
+    }
+
+    function openGroupConversation(groupId) {
+        const group = conversations.find(c => c.id === groupId);
+        if (group) {
+            currentGroupChat = group;
+            currentChatUser = null;
+            navigateTo('messenger');
+        }
+    }
+
+    function viewChatInfo() {
+        if (currentGroupChat) showGroupMembers();
+        else if (currentChatUser) viewProfile(currentChatUser.email);
+    }
+
+    async function blockUser() {
+        if (!currentChatUser || !confirm(`Block ${currentChatUser.full_name}?`)) return;
+        try {
+            await db.collection('users').doc(currentUser.id).update({
+                blockedUsers: firebase.firestore.FieldValue.arrayUnion(currentChatUser.email)
+            });
+            showToast('Blocked!');
+            navigateTo('conversations');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    async function deleteConversation() {
+        if (!confirm('Delete?')) return;
+        try {
+            if (currentGroupChat) {
+                await db.collection('conversations').doc(currentGroupChat.id).delete();
+            } else if (currentChatUser) {
+                const participants = [currentUser.email, currentChatUser.email].sort();
+                const convSnapshot = await db.collection('conversations').where('participants', '==', participants).limit(1).get();
+                if (!convSnapshot.empty) {
+                    await db.collection('conversations').doc(convSnapshot.docs[0].id).delete();
+                }
+            }
+            showToast('Deleted!');
+            navigateTo('conversations');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    async function loadMessages() {
+        if (messageUnsubscribe) {
+            messageUnsubscribe();
+            messageUnsubscribe = null;
+        }
+
+        if (currentGroupChat) {
+            const verifyBadge = getVerificationBadge({ verified: false });
+            document.getElementById('messengerAvatar').src = currentGroupChat.group_picture;
+            document.getElementById('messengerName').textContent = currentGroupChat.group_name;
+            document.getElementById('messengerVerifyBadge').innerHTML = '';
+            document.getElementById('groupInfoBtn').style.display = 'block';
+            document.getElementById('blockBtn').style.display = 'none';
+
+            messageUnsubscribe = db.collection('conversations').doc(currentGroupChat.id).collection('messages')
+                .orderBy('timestamp', 'asc')
+                .limit(50)
+                .onSnapshot(snapshot => {
+                    messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderGroupMessages();
+                });
+
+        } else if (currentChatUser) {
+            const verifyBadge = getVerificationBadge(currentChatUser);
+            document.getElementById('messengerAvatar').src = currentChatUser.profile_picture;
+            document.getElementById('messengerName').textContent = currentChatUser.full_name;
+            document.getElementById('messengerVerifyBadge').innerHTML = verifyBadge;
+            document.getElementById('groupInfoBtn').style.display = 'none';
+            document.getElementById('blockBtn').style.display = 'block';
+
+            const participants = [currentUser.email, currentChatUser.email].sort();
+            let convRef = await db.collection('conversations').where('participants', '==', participants).limit(1).get();
+
+            let conversationId;
+            if (convRef.empty) {
+                const newConv = await db.collection('conversations').add({
+                    participants,
+                    created_date: new Date().toISOString(),
+                    lastMessage: '',
+                    unreadBy: []
+                });
+                conversationId = newConv.id;
+            } else {
+                conversationId = convRef.docs[0].id;
+            }
+
+            messageUnsubscribe = db.collection('conversations').doc(conversationId).collection('messages')
+                .orderBy('timestamp', 'asc')
+                .limit(50)
+                .onSnapshot(snapshot => {
+                    messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderMessages();
+                });
+        }
+    }
+
+    function renderMessages() {
+        const container = document.getElementById('messagesList');
+
+        if (messages.length === 0) {
+            container.innerHTML = `<div class="empty-state"><h3>Start conversation! 💬</h3></div>`;
+            return;
+        }
+
+        container.innerHTML = messages.map(msg => {
+            const isSent = msg.sender === currentUser.email;
+            const time = new Date(msg.timestamp).toLocaleString([], { hour: '2-digit', minute: '2-digit' });
+
+            if (msg.type === 'image') {
+                return `
+                    <div class="message-bubble ${isSent ? 'sent' : 'received'}">
+                        <img src="${msg.imageUrl}" class="message-image" onclick="openLightbox('${msg.imageUrl}', 'image')">
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="message-bubble ${isSent ? 'sent' : 'received'}">
+                    <div>${linkify(msg.text)}</div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+        }).join('');
+
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function renderGroupMessages() {
+        const container = document.getElementById('messagesList');
+
+        if (messages.length === 0) {
+            container.innerHTML = `<div class="empty-state"><h3>Start conversation! 💬</h3></div>`;
+            return;
+        }
+
+        container.innerHTML = messages.map(msg => {
+            const isSent = msg.sender === currentUser.email;
+            const sender = users.find(u => u.email === msg.sender) || { full_name: 'User' };
+            const senderBadge = getVerificationBadge(sender);
+            const time = new Date(msg.timestamp).toLocaleString([], { hour: '2-digit', minute: '2-digit' });
+
+            if (msg.type === 'image') {
+                return `
+                    <div class="message-bubble ${isSent ? 'sent' : 'received'}">
+                        <div class="message-sender-name" style="display:flex;align-items:center;">${sender.full_name}${senderBadge}</div>
+                        <img src="${msg.imageUrl}" class="message-image" onclick="openLightbox('${msg.imageUrl}', 'image')">
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="message-bubble ${isSent ? 'sent' : 'received'}">
+                    <div class="message-sender-name" style="display:flex;align-items:center;">${sender.full_name}${senderBadge}</div>
+                    <div>${linkify(msg.text)}</div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+        }).join('');
+
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function closeMessageActions() {
+        if (currentMessageAction) {
+            currentMessageAction.remove();
+            currentMessageAction = null;
+        }
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const text = input.value.trim();
+        if (!text || (!currentChatUser && !currentGroupChat)) return;
+        input.value = '';
+
+        try {
+            if (currentGroupChat) {
+                await db.collection('conversations').doc(currentGroupChat.id).collection('messages').add({
+                    text,
+                    type: 'text',
+                    sender: currentUser.email,
+                    timestamp: new Date().toISOString()
+                });
+            } else {
+                const participants = [currentUser.email, currentChatUser.email].sort();
+                const convSnapshot = await db.collection('conversations').where('participants', '==', participants).limit(1).get();
+                const conversationId = convSnapshot.docs[0].id;
+
+                await db.collection('conversations').doc(conversationId).collection('messages').add({
+                    text,
+                    type: 'text',
+                    sender: currentUser.email,
+                    timestamp: new Date().toISOString()
+                });
+            }
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    async function handleMessageImage(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            showToast('Sending...', 'success');
+            const compressed = await compressImage(file, 800, 0.75);
+
+            if (currentGroupChat) {
+                await db.collection('conversations').doc(currentGroupChat.id).collection('messages').add({
+                    imageUrl: compressed,
+                    type: 'image',
+                    sender: currentUser.email,
+                    timestamp: new Date().toISOString()
+                });
+            } else {
+                const participants = [currentUser.email, currentChatUser.email].sort();
+                const convSnapshot = await db.collection('conversations').where('participants', '==', participants).get();
+                const conversationId = convSnapshot.docs[0].id;
+
+                await db.collection('conversations').doc(conversationId).collection('messages').add({
+                    imageUrl: compressed,
+                    type: 'image',
+                    sender: currentUser.email,
+                    timestamp: new Date().toISOString()
+                });
+            }
+
+            showToast('Sent! 📷');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    async function startVoiceRecording(e) {
+        e.preventDefault();
+        if (isRecording) return;
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+
+            mediaRecorder.ondataavailable = (event) => audioChunks.push(event.data);
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                await sendVoiceNote(audioBlob);
+                stream.getTracks().forEach(track => track.stop());
+            };
+
+            mediaRecorder.start();
+            isRecording = true;
+            showToast('Recording... 🎤');
+        } catch (error) {
+            showToast('Mic denied!', 'error');
+        }
+    }
+
+    function stopVoiceRecording(e) {
+        e.preventDefault();
+        if (!isRecording || !mediaRecorder) return;
+        mediaRecorder.stop();
+        isRecording = false;
+    }
+
+    async function sendVoiceNote(audioBlob) {
+        try {
+            showToast('Sending...', 'success');
+            const voiceUrl = await uploadToStorage(audioBlob, `voice/voice_${Date.now()}.webm`);
+
+            if (currentGroupChat) {
+                await db.collection('conversations').doc(currentGroupChat.id).collection('messages').add({
+                    voice_url: voiceUrl,
+                    type: 'voice',
+                    sender: currentUser.email,
+                    timestamp: new Date().toISOString()
+                });
+            } else {
+                const participants = [currentUser.email, currentChatUser.email].sort();
+                const convSnapshot = await db.collection('conversations').where('participants', '==', participants).get();
+
+                await db.collection('conversations').doc(convSnapshot.docs[0].id).collection('messages').add({
+                    voice_url: voiceUrl,
+                    type: 'voice',
+                    sender: currentUser.email,
+                    timestamp: new Date().toISOString()
+                });
+            }
+
+            showToast('Sent! 🎤');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    function playVoiceNote(voiceId, voiceUrl) {
+        const audioElement = document.getElementById('voicePlayer') || createVoicePlayer();
+        if (currentAudioPlaying === voiceId) {
+            audioElement.paused ? audioElement.play() : audioElement.pause();
+        } else {
+            audioElement.src = voiceUrl;
+            audioElement.play();
+            currentAudioPlaying = voiceId;
+        }
+    }
+
+    function createVoicePlayer() {
+        const audio = document.createElement('audio');
+        audio.id = 'voicePlayer';
+        audio.style.display = 'none';
+        document.body.appendChild(audio);
+        return audio;
+    }
+
+    function renderAdminPanel() {
+        const activeAds = ads.filter(a => !a.archived);
+
+        document.getElementById('adminPage').innerHTML = `
+            <div class="page-header"><h1>Admin 👑</h1></div>
+            <div class="admin-section">
+                <h3>Ads 📢</h3>
+                <button class="admin-btn admin-btn-submit" onclick="openAdModal()">+ Create</button>
+                ${activeAds.length === 0 ? '<p style="text-align:center;color:#6b7280;">No ads</p>' : ''}
+            </div>
+        `;
+    }
+
+    async function grantVerification(userId, type) {
+        if (!confirm(`Grant ${type} badge?`)) return;
+        try {
+            await db.collection('users').doc(userId).update({ verified: true, verified_type: type });
+            showToast(`✅ ${type} badge granted!`);
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+
+    async function deleteAd(adId) {
+        if (!confirm('Delete?')) return;
+        try {
+            await db.collection('posts').doc(adId).delete();
+            showToast('Deleted!');
+        } catch (error) {
+            showToast('Error', 'error');
+        }
+    }
+</script>
+</body>
+</html> 
