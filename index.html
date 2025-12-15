@@ -20,6 +20,113 @@
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+
+
+/* Load More Button - Animated */
+.load-more-btn {
+    position: fixed;
+    bottom: 100px;
+    right: -200px;
+    z-index: 9999;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+    animation: slideIn 0.8s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from {
+        right: -200px;
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        right: 20px;
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        right: 20px;
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        right: -200px;
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+.load-more-btn.hide {
+    animation: slideOut 0.5s ease-out forwards;
+}
+
+.load-more-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 25px rgba(102, 126, 234, 0.6);
+}
+
+.load-more-btn:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+.load-more-btn img {
+    width: 28px;
+    height: 28px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.load-more-btn .spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top: 3px solid white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Loading placeholder */
+.loading-placeholder {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+
+.loading-placeholder h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.loading-placeholder p {
+    font-size: 0.875rem;
+}
+
+
+
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -3948,53 +4055,53 @@
     const auth = firebase.auth();
     
     const ADMIN_PASSWORD = 'VNAXXTTM';
+    const LOAD_BATCH_SIZE = 5; // Load 5 items at a time
 
-    // ⚠️ CRITICAL: Define DEFAULT_USERS FIRST before using it
     const DEFAULT_USERS = [
-        {id: 'default1', email: 'darkmasterstoresales@streamx.com', full_name: 'Dark Master Store', profile_picture: 'https://i.postimg.cc/QCm9mF6Y/Screenshot-2025-12-14-173436.png', bio: 'Daily Sales', verified: true, verified_type: 'blue'},
-        {id: 'default2', email: 'djbeelzelkfanpage@streamx.com', full_name: 'Dj Beelze lk', profile_picture: 'https://i.postimg.cc/ncrgBfQx/IMG-8580.jpg', bio: 'DJ Content Dropping on You Tube, Bookings Call 081 809 6159 ', verified: true, verified_type: 'blue'},
-        {id: 'default3', email: 'doctordoris92@streamx.com', full_name: 'Dr Doris Kgadi', profile_picture: 'https://i.postimg.cc/g0CBZc5H/Red-Black-Modern-Food-Promotion-A4-Flyer-20250904-233556-0000.png', bio: 'Traditional Healing 0799788154', verified: true, verified_type: 'black'},
-        {id: 'default4', email: 'stiaan@streamx.com', full_name: 'Stiaan Venter', profile_picture: 'https://i.postimg.cc/kXPFJcfd/Screenshot-20251213-103723.jpg', bio: 'Forex Trader', verified: true, verified_type: 'blue'},
-        {id: 'default5', email: 'sarah.jones@streamx.com', full_name: 'Sarah Jones', profile_picture: 'https://i.pravatar.cc/150?img=1', bio: 'Content creator 📸', verified: false},
-        {id: 'default6', email: 'mike.chen@streamx.com', full_name: 'Mike Chen', profile_picture: 'https://i.pravatar.cc/150?img=12', bio: 'Tech enthusiast 💻', verified: false}
+        {id: 'default1', email: 'darkmasterstoresales@streamx.com', full_name: 'Dark Master Store', profile_picture: 'https://i.postimg.cc/wTzSNgMv/file-000000000408622f85e700a0863b3693.png', bio: 'Daily Sales', verified: true, verified_type: 'blue'},
+        {id: 'default2', email: 'djbeelzelkfanpage@streamx.com', full_name: 'Dj Beelze lk', profile_picture: 'https://i.postimg.cc/wTzSNgMv/file-000000000408622f85e700a0863b3693.png', bio: 'DJ Content', verified: true, verified_type: 'blue'},
+        {id: 'default3', email: 'doctordoris92@streamx.com', full_name: 'Dr Doris Kgadi', profile_picture: 'https://i.postimg.cc/g0CBZc5H/Red-Black-Modern-Food-Promotion-A4-Flyer-20250904-233556-0000.png', bio: 'Traditional Healing', verified: true, verified_type: 'black'},
+        {id: 'default4', email: 'stiaan@streamx.com', full_name: 'Stiaan Venter', profile_picture: 'https://i.postimg.cc/kXPFJcfd/Screenshot-20251213-103723.jpg', bio: 'Forex Trader', verified: true, verified_type: 'blue'}
     ];
 
     const DEFAULT_POSTS = [
-        {id: 'dp1', caption: 'We are looking for sellers Email darkmasterstore@gmail.com', content_urls: ['https://i.postimg.cc/L83fsk7J/Notes-251212-001508-f3b.png'], content_type: 'image', views_count: 34222, likes_count: 2111, likedBy: [], comments_count: 0, created_by: 'darkmasterstoresales@streamx.com', created_date: new Date(Date.now() - 86400000 * 2).toISOString(), hashtags: ['darkmaster'], comments_enabled: true},
-        {id: 'dp2', caption: 'For traditional Healing & Herbs Contact 0799788154 or Email doctordoris92@gmail.com', content_urls: ['https://i.postimg.cc/wTzSNgMv/file-000000000408622f85e700a0863b3693.png'], content_type: 'image', views_count: 4232233, likes_count: 4332, likedBy: [], comments_count: 0, created_by: 'doctordoris92@streamx.com', created_date: new Date(Date.now() - 86400000 * 3).toISOString(), hashtags: ['healing'], comments_enabled: false},
-        {id: 'dp3', caption: 'Summer vibes🌅🎵', content_urls: ['https://i.postimg.cc/0y6ftpRy/1759764743175.jpg'], content_type: 'image', views_count: 1665433, likes_count: 123211, likedBy: [], comments_count: 23332, created_by: 'stiaan@streamx.com', created_date: new Date(Date.now() - 86400000 * 4).toISOString(), hashtags: ['summer'], comments_enabled: true},
-        {id: 'dp4', caption: 'Manje Clean like heaven 🌅', content_urls: ['https://i.postimg.cc/JnLXmXyj/20231027-222456.jpg'], content_type: 'image', views_count: 25644, likes_count: 4533, likedBy: [], comments_count: 454, created_by: 'djbeelzelkfanpage@streamx.com', created_date: new Date(Date.now() - 86400000 * 5).toISOString(), hashtags: ['djbeelzelk'], comments_enabled: true},
-        {id: 'dp5', caption: 'Another day with South African Legend😍😍😎😎 #ramaphosa', content_urls: ['https://i.postimg.cc/x1hGFJty/instagram-1765614811854.jpg'], content_type: 'image', views_count: 5400088, likes_count: 6654, likedBy: [], comments_count: 543, created_by: 'stiaan@streamx.com', created_date: new Date(Date.now() - 86400000 * 6).toISOString(), hashtags: ['ramaphosa'], comments_enabled: true}
+        {id: 'dp1', caption: 'Looking for sellers! Email darkmasterstore@gmail.com', content_urls: ['https://i.postimg.cc/L83fsk7J/Notes-251212-001508-f3b.png'], content_type: 'image', views_count: 34222, likes_count: 2111, likedBy: [], comments_count: 0, created_by: 'darkmasterstoresales@streamx.com', created_date: new Date(Date.now() - 86400000 * 2).toISOString(), hashtags: ['darkmaster'], comments_enabled: true},
+        {id: 'dp2', caption: 'For traditional Healing Contact 0799788154', content_urls: ['https://i.postimg.cc/wTzSNgMv/file-000000000408622f85e700a0863b3693.png'], content_type: 'image', views_count: 4232233, likes_count: 4332, likedBy: [], comments_count: 0, created_by: 'doctordoris92@streamx.com', created_date: new Date(Date.now() - 86400000 * 3).toISOString(), hashtags: ['healing'], comments_enabled: false},
+        {id: 'dp3', caption: 'Summer vibes 🌅', content_urls: ['https://i.postimg.cc/0y6ftpRy/1759764743175.jpg'], content_type: 'image', views_count: 1665433, likes_count: 123211, likedBy: [], comments_count: 23332, created_by: 'stiaan@streamx.com', created_date: new Date(Date.now() - 86400000 * 4).toISOString(), hashtags: ['summer'], comments_enabled: true}
     ];
 
     const DEFAULT_STORIES = [
-        {id: 'ds1', content_type: 'text', text_content: 'Our future Dj beelze lk', background_color: '#fbbf24', views_count: 43210, created_by: 'djbeelzelkfanpage@streamx.com', created_date: new Date().toISOString()},
-        {id: 'ds2', content_type: 'text', text_content: 'For traditional Healing Contact 0799788154', background_color: '#3b82f6', views_count: 54310, created_by: 'doctordoris92@streamx.com', created_date: new Date().toISOString()},
-        {id: 'ds3', content_type: 'text', text_content: 'South Kings 👑', background_color: '#10b981', views_count: 12210, created_by: 'stiaan@streamx.com', created_date: new Date().toISOString()}
+        {id: 'ds1', content_type: 'text', text_content: 'Dj beelze lk 🎵', background_color: '#fbbf24', views_count: 43210, created_by: 'djbeelzelkfanpage@streamx.com', created_date: new Date().toISOString()},
+        {id: 'ds2', content_type: 'text', text_content: 'Traditional Healing 📞 0799788154', background_color: '#3b82f6', views_count: 54310, created_by: 'doctordoris92@streamx.com', created_date: new Date().toISOString()}
     ];
 
-    const DEFAULT_MARKET_ITEMS = [
-        {id: 'dm1', name: 'iPhone 14 Pro', description: 'Perfect condition!', location: 'Johannesburg', category: 'Electronics', condition: 'New', whatsapp: '+27123456789', image_url: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=600', likes_count: 1234, created_by: 'mike.chen@streamx.com', created_date: new Date(Date.now() - 86400000).toISOString()}
-    ];
-
-    const DEFAULT_REELS = [
-        {id: 'dr1', video_url: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4', caption: 'Amazing! 💃', views_count: 456789, likes_count: 34567, likedBy: [], comments_enabled: true, comments_count: 1234, created_by: 'sarah.jones@streamx.com', created_date: new Date(Date.now() - 86400000).toISOString()}
-    ];
-    
     var savedAccounts = JSON.parse(localStorage.getItem('streamx-saved-accounts') || '[]');
     var currentUser = JSON.parse(localStorage.getItem('streamx-current-user') || 'null');
     var currentPage = 'feed';
     var posts = [];
+    var allPosts = [];
+    var lastPostDoc = null;
+    var postsLoaded = 0;
     var musicPosts = [];
-    var stories = DEFAULT_STORIES;
-    var reels = DEFAULT_REELS;
+    var lastMusicDoc = null;
+    var musicLoaded = 0;
+    var stories = [];
+    var storiesLoaded = false;
+    var reels = [];
+    var reelsLoaded = false;
     var users = DEFAULT_USERS;
+    var lastUserDoc = null;
+    var usersLoaded = 4; // We have 4 default users
     var ads = [];
-    var marketItems = DEFAULT_MARKET_ITEMS;
+    var marketItems = [];
+    var lastMarketDoc = null;
+    var marketLoaded = 0;
     var currentChatUser = null;
     var currentGroupChat = null;
     var messages = [];
     var conversations = [];
+    var lastConvDoc = null;
+    var convsLoaded = 0;
     var uploadedFiles = [];
     var currentHashtags = [];
     var searchQuery = '';
@@ -4022,18 +4129,13 @@
     var aiMessages = [];
     var aiImageFile = null;
     var groupPictureFile = null;
-    var currentMessageAction = null;
     var isRecording = false;
     var mediaRecorder = null;
     var audioChunks = [];
     var verifyType = 'blue';
-    var lastPostDoc = null;
-    var currentPostIndex = 0;
-    var isLoadingPost = false;
-    var postsListener = null;
-    var storiesListener = null;
-    var musicListener = null;
-    var adsListener = null;
+    var profileDataLoaded = false;
+    var adminDataLoaded = false;
+    var lastScrollPosition = 0;
 
     function formatCount(num) {
         if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
@@ -4080,26 +4182,52 @@
         }, 3000);
     }
 
+    // Create Load More Button
+    function createLoadMoreButton(text, onClick) {
+        const existing = document.querySelector('.load-more-btn');
+        if (existing) existing.remove();
+
+        const btn = document.createElement('button');
+        btn.className = 'load-more-btn';
+        btn.innerHTML = `
+            <img src="https://i.postimg.cc/NMrQN7T1/Chat-GPT-Image-Dec-4-2025-07-28-52-PM.png" alt="X">
+            <span>${text}</span>
+        `;
+        btn.onclick = onClick;
+        document.body.appendChild(btn);
+        return btn;
+    }
+
+    function hideLoadMoreButton() {
+        const btn = document.querySelector('.load-more-btn');
+        if (btn) {
+            btn.classList.add('hide');
+            setTimeout(() => btn.remove(), 500);
+        }
+    }
+
+    function showLoadingInButton() {
+        const btn = document.querySelector('.load-more-btn');
+        if (btn) {
+            btn.innerHTML = `<div class="spinner"></div><span>Loading...</span>`;
+            btn.disabled = true;
+        }
+    }
+
     window.addEventListener('load', function() {
-        console.log('✅ StreamX Initialized - Lazy Loading Active');
-        history.pushState({ page: 'feed' }, '', window.location.href);
+        console.log('✅ StreamX Ready - Load-on-Demand Mode');
         
         if (!currentUser) {
             showAuthModal();
         } else {
             updateHeaderUI();
             updateNavButtons();
-            renderStories();
+            // Load ONLY first 5 posts on startup
+            loadInitialPosts();
         }
         setupEventListeners();
     });
 
-    window.addEventListener('popstate', function(e) {
-        e.preventDefault();
-        if (currentPage !== 'feed') navigateTo('feed');
-    });
-
-    let lastScrollPosition = 0;
     window.addEventListener('scroll', function() {
         const bottomNav = document.getElementById('bottomNav');
         const currentScroll = window.scrollY;
@@ -4110,14 +4238,89 @@
             } else {
                 bottomNav.classList.remove('hidden-nav');
             }
-            
-            // Load one more post when near bottom
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 800) {
-                loadOnePost();
-            }
         }
         lastScrollPosition = currentScroll;
     });
+
+    // Load ONLY 5 posts initially
+    async function loadInitialPosts() {
+        try {
+            const snapshot = await db.collection('posts').limit(5).get();
+            const firePosts = snapshot.docs
+                .map(doc => ({ id: doc.id, ...doc.data() }))
+                .filter(p => !p.is_music && !p.is_ad && !p.is_story && !p.is_reel);
+            
+            // Sort manually
+            firePosts.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+            
+            allPosts = [...firePosts, ...DEFAULT_POSTS];
+            posts = allPosts;
+            lastPostDoc = snapshot.docs[snapshot.docs.length - 1];
+            postsLoaded = firePosts.length;
+            
+            console.log(`✅ Loaded ${postsLoaded} posts from Firestore + ${DEFAULT_POSTS.length} default`);
+            
+            renderPosts();
+            
+            // Show Load More button if we got 5 posts
+            if (postsLoaded === 5) {
+                createLoadMoreButton('Load 5 More Posts', loadMorePosts);
+            }
+        } catch (error) {
+            console.error('Error loading initial posts:', error);
+            posts = [...DEFAULT_POSTS];
+            renderPosts();
+        }
+    }
+
+    // Load next 5 posts
+    async function loadMorePosts() {
+        if (!lastPostDoc) {
+            showToast('No more posts!', 'error');
+            hideLoadMoreButton();
+            return;
+        }
+
+        showLoadingInButton();
+
+        try {
+            const snapshot = await db.collection('posts')
+                .startAfter(lastPostDoc)
+                .limit(5)
+                .get();
+
+            if (snapshot.empty) {
+                showToast('No more posts!');
+                hideLoadMoreButton();
+                return;
+            }
+
+            const newPosts = snapshot.docs
+                .map(doc => ({ id: doc.id, ...doc.data() }))
+                .filter(p => !p.is_music && !p.is_ad && !p.is_story && !p.is_reel);
+
+            newPosts.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+
+            allPosts = [...allPosts, ...newPosts];
+            posts = allPosts;
+            lastPostDoc = snapshot.docs[snapshot.docs.length - 1];
+            postsLoaded += newPosts.length;
+
+            console.log(`✅ Loaded ${newPosts.length} more posts. Total: ${postsLoaded}`);
+
+            renderPosts();
+
+            if (newPosts.length === 5) {
+                createLoadMoreButton('Load 5 More Posts', loadMorePosts);
+            } else {
+                hideLoadMoreButton();
+            }
+        } catch (error) {
+            console.error('Error loading more posts:', error);
+            showToast('Error loading posts', 'error');
+            createLoadMoreButton('Try Again', loadMorePosts);
+        }
+    }
 
     function setupEventListeners() {
         document.getElementById('sButton').addEventListener('click', function(e) {
@@ -4134,9 +4337,6 @@
 
         document.getElementById('searchInput').addEventListener('input', function(e) {
             searchQuery = e.target.value.toLowerCase();
-            posts = [];
-            currentPostIndex = 0;
-            lastPostDoc = null;
             renderPosts();
         });
 
@@ -4204,12 +4404,6 @@
 
         document.getElementById('marketSearch').addEventListener('input', function() {
             if (marketMode === 'view' || marketMode === 'buy') renderMarketItems();
-        });
-
-        document.addEventListener('click', function(e) {
-            if (currentMessageAction && !e.target.closest('.message-actions-popup') && !e.target.closest('.message-bubble')) {
-                closeMessageActions();
-            }
         });
     }
 
@@ -4291,14 +4485,13 @@
                 const newUser = {
                     email: user.email,
                     full_name: user.displayName || 'User',
-                    profile_picture: user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&size=200&background=000000&color=ffffff`,
+                    profile_picture: user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&size=200`,
                     accessCode: Math.floor(100000 + Math.random() * 900000).toString(),
                     resetCode: generateResetCode(),
                     created_date: new Date().toISOString(),
                     blockedUsers: [],
                     bio: '',
-                    verified: false,
-                    verified_type: ''
+                    verified: false
                 };
                 const docRef = await db.collection('users').add(newUser);
                 newUser.id = docRef.id;
@@ -4311,6 +4504,7 @@
             saveAccountToList(currentUser);
             hideAuthModal();
             updateHeaderUI();
+            loadInitialPosts();
             showToast('Welcome! 🎉');
         } catch (error) {
             showAuthError(error.message);
@@ -4341,14 +4535,13 @@
             const newUser = {
                 email: email,
                 full_name: name,
-                profile_picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=200&background=000000&color=ffffff`,
+                profile_picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=200`,
                 accessCode: Math.floor(100000 + Math.random() * 900000).toString(),
                 resetCode: generateResetCode(),
                 created_date: new Date().toISOString(),
                 blockedUsers: [],
                 bio: '',
-                verified: false,
-                verified_type: ''
+                verified: false
             };
 
             const docRef = await db.collection('users').add(newUser);
@@ -4359,6 +4552,7 @@
             saveAccountToList(currentUser);
             hideAuthModal();
             updateHeaderUI();
+            loadInitialPosts();
             showToast('Account created! 🎉');
         } catch (error) {
             showAuthError(error.message);
@@ -4390,6 +4584,7 @@
                 saveAccountToList(currentUser);
                 hideAuthModal();
                 updateHeaderUI();
+                loadInitialPosts();
                 showToast('Welcome back! 🎉');
             }
         } catch (error) {
@@ -4416,7 +4611,7 @@
     }
 
     function handleLogout() {
-        if (confirm('Are you sure you want to logout?')) {
+        if (confirm('Logout?')) {
             auth.signOut();
             currentUser = null;
             localStorage.removeItem('streamx-current-user');
@@ -4428,45 +4623,45 @@
     }
 
     async function changeResetCode() {
-        const newResetCode = prompt('Enter new reset code (must start with r):');
-        if (!newResetCode || !newResetCode.startsWith('r') || newResetCode.length < 6) {
-            showToast('Invalid reset code!', 'error');
+        const newCode = prompt('Enter new reset code (start with r):');
+        if (!newCode || !newCode.startsWith('r') || newCode.length < 6) {
+            showToast('Invalid!', 'error');
             return;
         }
         try {
-            await db.collection('users').doc(currentUser.id).update({ resetCode: newResetCode });
-            currentUser.resetCode = newResetCode;
+            await db.collection('users').doc(currentUser.id).update({ resetCode: newCode });
+            currentUser.resetCode = newCode;
             localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
-            document.getElementById('profileResetCode').textContent = newResetCode;
-            showToast('✅ Reset code updated!');
+            document.getElementById('profileResetCode').textContent = newCode;
+            showToast('✅ Updated!');
         } catch (error) {
             showToast('Error', 'error');
         }
     }
 
     async function editProfileName() {
-        const newName = prompt('Enter new name:', currentUser.full_name);
+        const newName = prompt('New name:', currentUser.full_name);
         if (!newName || !newName.trim()) return;
         try {
             await db.collection('users').doc(currentUser.id).update({ full_name: newName.trim() });
             currentUser.full_name = newName.trim();
             localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
             document.getElementById('profileName').textContent = newName.trim();
-            showToast('✅ Name updated!');
+            showToast('✅ Updated!');
         } catch (error) {
             showToast('Error', 'error');
         }
     }
 
     async function editBio() {
-        const newBio = prompt('Enter your bio:', currentUser.bio || '');
+        const newBio = prompt('Enter bio:', currentUser.bio || '');
         if (newBio === null) return;
         try {
             await db.collection('users').doc(currentUser.id).update({ bio: newBio.trim() });
             currentUser.bio = newBio.trim();
             localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
-            renderProfile(currentUser);
-            showToast('✅ Bio updated!');
+            if (profileDataLoaded) renderProfile(currentUser);
+            showToast('✅ Updated!');
         } catch (error) {
             showToast('Error', 'error');
         }
@@ -4490,8 +4685,8 @@
             currentUser.phone = phone.trim();
             currentUser.whatsapp = whatsapp.trim();
             localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
-            renderProfile(currentUser);
-            showToast('✅ Contacts updated!');
+            if (profileDataLoaded) renderProfile(currentUser);
+            showToast('✅ Updated!');
         } catch (error) {
             showToast('Error', 'error');
         }
@@ -4529,6 +4724,14 @@
                 localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
                 document.getElementById('accountsModal').classList.remove('active');
                 updateHeaderUI();
+                
+                // Reset and reload
+                posts = [];
+                allPosts = [];
+                lastPostDoc = null;
+                postsLoaded = 0;
+                loadInitialPosts();
+                
                 navigateTo('feed');
                 showToast(`Switched to ${currentUser.full_name}!`);
             }
@@ -4606,7 +4809,7 @@
 
         try {
             const participants = [currentUser.email, ...selectedMembers];
-            let groupPictureUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(groupName)}&size=200&background=000000&color=ffffff`;
+            let groupPictureUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(groupName)}&size=200`;
 
             if (groupPictureFile) {
                 groupPictureUrl = await uploadToStorage(groupPictureFile, `groups/${Date.now()}_${groupPictureFile.name}`);
@@ -4716,6 +4919,8 @@
         document.getElementById('messengerPage').classList.add('hidden');
         document.getElementById('adminPage').classList.add('hidden');
 
+        hideLoadMoreButton();
+
         const bottomNav = document.getElementById('bottomNav');
         bottomNav.classList.toggle('hidden-nav', page !== 'feed');
 
@@ -4724,20 +4929,23 @@
         if (page === 'feed') {
             document.getElementById('feedPage').classList.remove('hidden');
             renderPosts();
-            loadStoriesOnDemand();
+            if (!storiesLoaded) {
+                createLoadMoreButton('Load Stories', loadStories);
+            }
         } else if (page === 'music') {
             document.getElementById('musicPage').classList.remove('hidden');
-            loadMusicOnDemand();
+            renderMusicPlaceholder();
         } else if (page === 'create') {
             document.getElementById('createPage').classList.remove('hidden');
         } else if (page === 'profile') {
             document.getElementById('profilePage').classList.remove('hidden');
+            renderProfilePlaceholder();
         } else if (page === 'users') {
             document.getElementById('usersPage').classList.remove('hidden');
-            loadUsersOnDemand();
+            renderUsersPlaceholder();
         } else if (page === 'conversations') {
             document.getElementById('conversationsPage').classList.remove('hidden');
-            loadConversationsOnDemand();
+            renderConversationsPlaceholder();
         } else if (page === 'messenger') {
             document.getElementById('messengerPage').classList.remove('hidden');
             loadMessages();
@@ -4747,299 +4955,355 @@
                 return;
             }
             document.getElementById('adminPage').classList.remove('hidden');
-            loadAdminData();
+            renderAdminPlaceholder();
         }
     }
 
-    function loadStoriesOnDemand() {
-        if (!storiesListener) {
-            storiesListener = db.collection('posts')
-                .where('is_story', '==', true)
-                .orderBy('created_date', 'desc')
-                .limit(10)
-                .onSnapshot(snapshot => {
-                    const fireStories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    stories = fireStories.length > 0 ? [...fireStories, ...DEFAULT_STORIES] : DEFAULT_STORIES;
-                    renderStories();
-                });
-        }
+    // Placeholder renderers
+    function renderMusicPlaceholder() {
+        const container = document.getElementById('musicFeed');
+        container.innerHTML = `
+            <div class="loading-placeholder">
+                <h3>🎵 Music</h3>
+                <p>Click "Load Music" to view music posts</p>
+            </div>
+        `;
+        createLoadMoreButton('Load Music', loadMusic);
     }
 
-    function loadMusicOnDemand() {
-        if (!musicListener) {
-            musicListener = db.collection('posts')
-                .where('is_music', '==', true)
-                .orderBy('created_date', 'desc')
-                .limit(20)
-                .onSnapshot(snapshot => {
-                    musicPosts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    renderMusicFeed();
-                });
+    function renderProfilePlaceholder() {
+        const container = document.getElementById('profilePage');
+        if (!profileDataLoaded) {
+            createLoadMoreButton('Load Profile Data', () => {
+                profileDataLoaded = true;
+                renderProfile(currentUser);
+                hideLoadMoreButton();
+            });
         } else {
-            renderMusicFeed();
+            renderProfile(currentUser);
         }
     }
 
-    function loadUsersOnDemand() {
-        db.collection('users')
-            .limit(30)
-            .get()
-            .then(snapshot => {
-                const fireUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                users = fireUsers.length > 0 ? [...fireUsers, ...DEFAULT_USERS] : DEFAULT_USERS;
-                renderUsers();
-            });
+    function renderUsersPlaceholder() {
+        const container = document.getElementById('usersList');
+        container.innerHTML = `
+            <div class="loading-placeholder">
+                <h3>👥 Users</h3>
+                <p>Click "Load Users" to discover people</p>
+            </div>
+        `;
+        createLoadMoreButton('Load 5 Users', loadMoreUsers);
     }
 
-    function loadConversationsOnDemand() {
-        if (!currentUser) return;
-
-        db.collection('conversations')
-            .where('participants', 'array-contains', currentUser.email)
-            .orderBy('created_date', 'desc')
-            .limit(20)
-            .onSnapshot(snapshot => {
-                conversations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                updateMessengerBadge();
-                renderConversations();
-            });
+    function renderConversationsPlaceholder() {
+        const container = document.getElementById('conversationsList');
+        container.innerHTML = `
+            <div class="loading-placeholder">
+                <h3>💬 Conversations</h3>
+                <p>Click "Load Conversations" to view your chats</p>
+            </div>
+        `;
+        createLoadMoreButton('Load Conversations', loadConversations);
     }
 
-    function loadAdminData() {
-        if (!adsListener) {
-            adsListener = db.collection('posts')
-                .where('is_ad', '==', true)
-                .orderBy('created_date', 'desc')
-                .onSnapshot(snapshot => {
-                    ads = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    renderAdminPanel();
-                });
-        }
-
-        db.collection('users').limit(50).get().then(snapshot => {
-            const fireUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            users = [...fireUsers, ...DEFAULT_USERS];
-            renderAdminPanel();
-        });
-
-        db.collection('posts')
-            .orderBy('created_date', 'desc')
-            .limit(50)
-            .get()
-            .then(snapshot => {
-                posts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(p => !p.is_music && !p.is_ad && !p.is_story && !p.is_reel);
-                renderAdminPanel();
-            });
+    function renderAdminPlaceholder() {
+        document.getElementById('adminPage').innerHTML = `
+            <div class="page-header"><h1>Admin 👑</h1></div>
+            <div class="loading-placeholder">
+                <h3>Admin Panel</h3>
+                <p>Click "Load Admin Data" to manage your app</p>
+            </div>
+        `;
+        createLoadMoreButton('Load Admin Data', loadAdminData);
     }
 
-    function updateMessengerBadge() {
-        const unreadCount = conversations.filter(c => c.unreadBy && c.unreadBy.includes(currentUser.email)).length;
-        const badge = document.getElementById('messengerBadge');
-        if (unreadCount > 0) {
-            badge.textContent = unreadCount > 10 ? '10+' : unreadCount;
-            badge.style.display = 'block';
-        } else {
-            badge.style.display = 'none';
-        }
-    }
+    // Load Stories
+    async function loadStories() {
+        if (storiesLoaded) return;
 
-    async function loadOnePost() {
-        if (isLoadingPost) return;
-        isLoadingPost = true;
+        showLoadingInButton();
 
         try {
-            if (searchQuery) {
-                // Search mode - load all matching
-                if (currentPostIndex === 0) {
-                    const allPosts = DEFAULT_POSTS.filter(p => 
-                        p.caption.toLowerCase().includes(searchQuery) ||
-                        p.hashtags?.some(h => h.toLowerCase().includes(searchQuery))
-                    );
-                    allPosts.forEach(p => renderSinglePost(p));
-                }
-            } else if (activeHashtag) {
-                // Hashtag filter
-                if (currentPostIndex === 0) {
-                    const filtered = DEFAULT_POSTS.filter(p => p.hashtags?.includes(activeHashtag));
-                    filtered.forEach(p => renderSinglePost(p));
-                }
+            const snapshot = await db.collection('posts')
+                .where('is_story', '==', true)
+                .limit(10)
+                .get();
+
+            const fireStories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            stories = fireStories.length > 0 ? [...fireStories, ...DEFAULT_STORIES] : DEFAULT_STORIES;
+            storiesLoaded = true;
+
+            renderStories();
+            hideLoadMoreButton();
+            showToast('Stories loaded!');
+        } catch (error) {
+            console.error('Error loading stories:', error);
+            stories = DEFAULT_STORIES;
+            renderStories();
+            hideLoadMoreButton();
+        }
+    }
+
+    // Load Music
+    async function loadMusic() {
+        showLoadingInButton();
+
+        try {
+            let query = db.collection('posts').where('is_music', '==', true);
+            
+            if (lastMusicDoc) {
+                query = query.startAfter(lastMusicDoc);
+            }
+
+            const snapshot = await query.limit(5).get();
+
+            if (snapshot.empty) {
+                showToast('No more music!');
+                hideLoadMoreButton();
+                return;
+            }
+
+            const newMusic = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            musicPosts = [...musicPosts, ...newMusic];
+            lastMusicDoc = snapshot.docs[snapshot.docs.length - 1];
+            musicLoaded += newMusic.length;
+
+            renderMusicFeed();
+
+            if (newMusic.length === 5) {
+                createLoadMoreButton('Load 5 More Songs', loadMusic);
             } else {
-                // Normal loading - one by one
-                if (currentPostIndex < DEFAULT_POSTS.length) {
-                    renderSinglePost(DEFAULT_POSTS[currentPostIndex]);
-                    currentPostIndex++;
-                } else if (!lastPostDoc) {
-                    // Try Firebase
-                    const snapshot = await db.collection('posts')
-                        .where('is_music', '==', false)
-                        .where('is_ad', '==', false)
-                        .where('is_story', '==', false)
-                        .where('is_reel', '==', false)
-                        .orderBy('created_date', 'desc')
-                        .limit(1)
-                        .get();
-
-                    if (!snapshot.empty) {
-                        const post = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
-                        renderSinglePost(post);
-                        lastPostDoc = snapshot.docs[0];
-                    }
-                } else {
-                    // Load next from Firebase
-                    const snapshot = await db.collection('posts')
-                        .where('is_music', '==', false)
-                        .where('is_ad', '==', false)
-                        .where('is_story', '==', false)
-                        .where('is_reel', '==', false)
-                        .orderBy('created_date', 'desc')
-                        .startAfter(lastPostDoc)
-                        .limit(1)
-                        .get();
-
-                    if (!snapshot.empty) {
-                        const post = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
-                        renderSinglePost(post);
-                        lastPostDoc = snapshot.docs[0];
-                    }
-                }
+                hideLoadMoreButton();
             }
         } catch (error) {
-            console.error('Error loading post:', error);
+            console.error('Error loading music:', error);
+            showToast('Error loading music', 'error');
+            createLoadMoreButton('Try Again', loadMusic);
         }
+    }
 
-        isLoadingPost = false;
+    // Load More Users
+    async function loadMoreUsers() {
+        showLoadingInButton();
+
+        try {
+            let query = db.collection('users');
+            
+            if (lastUserDoc) {
+                query = query.startAfter(lastUserDoc);
+            }
+
+            const snapshot = await query.limit(5).get();
+
+            if (snapshot.empty) {
+                showToast('No more users!');
+                hideLoadMoreButton();
+                return;
+            }
+
+            const newUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            users = [...users, ...newUsers];
+            lastUserDoc = snapshot.docs[snapshot.docs.length - 1];
+            usersLoaded += newUsers.length;
+
+            renderUsers();
+
+            if (newUsers.length === 5) {
+                createLoadMoreButton('Load 5 More Users', loadMoreUsers);
+            } else {
+                hideLoadMoreButton();
+            }
+        } catch (error) {
+            console.error('Error loading users:', error);
+            showToast('Error loading users', 'error');
+            createLoadMoreButton('Try Again', loadMoreUsers);
+        }
+    }
+
+    // Load Conversations
+    async function loadConversations() {
+        if (!currentUser) return;
+
+        showLoadingInButton();
+
+        try {
+            let query = db.collection('conversations')
+                .where('participants', 'array-contains', currentUser.email);
+            
+            if (lastConvDoc) {
+                query = query.startAfter(lastConvDoc);
+            }
+
+            const snapshot = await query.limit(5).get();
+
+            if (snapshot.empty) {
+                showToast('No conversations!');
+                hideLoadMoreButton();
+                return;
+            }
+
+            const newConvs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            conversations = [...conversations, ...newConvs];
+            lastConvDoc = snapshot.docs[snapshot.docs.length - 1];
+            convsLoaded += newConvs.length;
+
+            renderConversations();
+
+            if (newConvs.length === 5) {
+                createLoadMoreButton('Load 5 More Chats', loadConversations);
+            } else {
+                hideLoadMoreButton();
+            }
+        } catch (error) {
+            console.error('Error loading conversations:', error);
+            showToast('Error loading conversations', 'error');
+            createLoadMoreButton('Try Again', loadConversations);
+        }
+    }
+
+    // Load Admin Data
+    async function loadAdminData() {
+        if (adminDataLoaded) return;
+
+        showLoadingInButton();
+
+        try {
+            const adsSnapshot = await db.collection('posts')
+                .where('is_ad', '==', true)
+                .limit(20)
+                .get();
+
+            ads = adsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            adminDataLoaded = true;
+
+            renderAdminPanel();
+            hideLoadMoreButton();
+            showToast('Admin data loaded!');
+        } catch (error) {
+            console.error('Error loading admin data:', error);
+            showToast('Error loading admin data', 'error');
+            createLoadMoreButton('Try Again', loadAdminData);
+        }
     }
 
     function renderPosts() {
         const container = document.getElementById('postsFeed');
-        container.innerHTML = '<div style="text-align:center;padding:2rem;"><div class="loading"></div></div>';
-
-        currentPostIndex = 0;
-        lastPostDoc = null;
         
-        setTimeout(() => {
-            container.innerHTML = '';
-            for (let i = 0; i < 3; i++) {
-                loadOnePost();
-            }
-        }, 300);
-    }
-
-    function renderSinglePost(post) {
-        const container = document.getElementById('postsFeed');
-        const user = users.find(u => u.email === post.created_by) || { full_name: 'User', profile_picture: '', verified: false };
-
-        const postCard = document.createElement('div');
-        postCard.style.cssText = 'margin-bottom:1.5rem;background:white;border-radius:1rem;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);';
-
-        const verifyBadge = getVerificationBadge(user);
-
-        let captionHTML = '';
-        if (post.caption) {
-            const isLong = post.caption.length > 100;
-            const shortText = isLong ? post.caption.substring(0, 100) : post.caption;
-            captionHTML = `
-                <div style="padding:0 1rem;margin:0.75rem 0;">
-                    <span id="caption-short-${post.id}" style="font-size:0.9375rem;line-height:1.5;">${linkify(shortText)}</span>
-                    ${isLong ? `
-                        <span id="caption-full-${post.id}" style="display:none;font-size:0.9375rem;line-height:1.5;">${linkify(post.caption)}</span>
-                        <span onclick="toggleCaption('${post.id}')" style="color:#3b82f6;cursor:pointer;font-weight:600;margin-left:0.25rem;" id="read-more-${post.id}">...more</span>
-                    ` : ''}
-                </div>
-            `;
+        let filtered = posts;
+        
+        if (searchQuery) {
+            filtered = posts.filter(p =>
+                p.caption?.toLowerCase().includes(searchQuery) ||
+                p.hashtags?.some(h => h.toLowerCase().includes(searchQuery))
+            );
+        }
+        
+        if (activeHashtag) {
+            filtered = filtered.filter(p => p.hashtags?.includes(activeHashtag));
         }
 
-        const hashtagsHTML = post.hashtags?.length > 0 ? 
-            `<div style="padding:0 1rem;margin-bottom:0.75rem;display:flex;flex-wrap:wrap;gap:0.5rem;">${post.hashtags.map(tag => `<span style="color:#3b82f6;font-size:0.875rem;font-weight:600;cursor:pointer;" onclick="filterByHashtag('${tag}')">#${tag}</span>`).join('')}</div>` : '';
+        if (filtered.length === 0) {
+            container.innerHTML = `<div class="empty-state"><h3>No posts found</h3></div>`;
+            return;
+        }
 
-        postCard.innerHTML = `
-            <div style="padding:1rem;display:flex;justify-content:space-between;align-items:center;">
-                <div style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;" onclick="viewProfile('${user.email}')">
-                    <img src="${user.profile_picture}" style="width:40px;height:40px;border-radius:50%;" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name)}&size=40&background=000&color=fff'">
-                    <div>
-                        <div style="font-weight:600;font-size:0.9375rem;display:flex;align-items:center;">
-                            ${user.full_name}${verifyBadge}
+        container.innerHTML = filtered.map(post => {
+            const user = users.find(u => u.email === post.created_by) || { full_name: 'User', profile_picture: '', verified: false };
+            const verifyBadge = getVerificationBadge(user);
+
+            let captionHTML = '';
+            if (post.caption) {
+                const isLong = post.caption.length > 100;
+                const shortText = isLong ? post.caption.substring(0, 100) : post.caption;
+                captionHTML = `
+                    <div style="padding:0 1rem;margin:0.75rem 0;">
+                        <span id="caption-short-${post.id}" style="font-size:0.9375rem;line-height:1.5;">${linkify(shortText)}</span>
+                        ${isLong ? `
+                            <span id="caption-full-${post.id}" style="display:none;font-size:0.9375rem;line-height:1.5;">${linkify(post.caption)}</span>
+                            <span onclick="toggleCaption('${post.id}')" style="color:#3b82f6;cursor:pointer;font-weight:600;margin-left:0.25rem;" id="read-more-${post.id}">...more</span>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            const hashtagsHTML = post.hashtags?.length > 0 ? 
+                `<div style="padding:0 1rem;margin-bottom:0.75rem;display:flex;flex-wrap:wrap;gap:0.5rem;">${post.hashtags.map(tag => `<span style="color:#3b82f6;font-size:0.875rem;font-weight:600;cursor:pointer;" onclick="filterByHashtag('${tag}')">#${tag}</span>`).join('')}</div>` : '';
+
+            return `
+                <div style="margin-bottom:1.5rem;background:white;border-radius:1rem;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="padding:1rem;display:flex;justify-content:space-between;align-items:center;">
+                        <div style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;" onclick="viewProfile('${user.email}')">
+                            <img src="${user.profile_picture}" style="width:40px;height:40px;border-radius:50%;">
+                            <div>
+                                <div style="font-weight:600;font-size:0.9375rem;display:flex;align-items:center;">
+                                    ${user.full_name}${verifyBadge}
+                                </div>
+                                <div style="font-size:0.8125rem;color:#6b7280;">${new Date(post.created_date).toLocaleDateString()}</div>
+                            </div>
                         </div>
-                        <div style="font-size:0.8125rem;color:#6b7280;">${new Date(post.created_date).toLocaleDateString()}</div>
+                        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.8125rem;color:#6b7280;">
+                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#3b82f6" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <span>${formatCount(post.views_count || 0)}</span>
+                        </div>
+                    </div>
+                    
+                    ${captionHTML}
+                    
+                    <div style="position:relative;background:#f3f4f6;">
+                        <img src="${post.content_urls?.[0]}" style="width:100%;min-height:300px;object-fit:cover;cursor:pointer;" onclick="openLightbox('${post.content_urls?.[0]}', 'image')">
+                    </div>
+                    
+                    ${hashtagsHTML}
+                    
+                    <div style="padding:1rem;display:flex;align-items:center;gap:1.5rem;">
+                        <div onclick="likePost('${post.id}')" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                            <svg style="width:26px;height:26px;" viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+                                <defs>
+                                    <linearGradient id="heartGrad${post.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#3b82f6"/>
+                                        <stop offset="100%" style="stop-color:#ef4444"/>
+                                    </linearGradient>
+                                </defs>
+                                <path stroke="url(#heartGrad${post.id})" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                            <span style="font-weight:700;font-size:0.9375rem;">${formatCount(post.likes_count || 0)}</span>
+                        </div>
+                        
+                        <div onclick="openPostModal('${post.id}')" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                            <svg style="width:26px;height:26px;" viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+                                <defs>
+                                    <linearGradient id="commentGrad${post.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#3b82f6"/>
+                                        <stop offset="100%" style="stop-color:#ef4444"/>
+                                    </linearGradient>
+                                </defs>
+                                <path stroke="url(#commentGrad${post.id})" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            <span style="font-weight:700;font-size:0.9375rem;">${formatCount(post.comments_count || 0)}</span>
+                        </div>
+                        
+                        <div onclick="shareToMessenger('${post.id}')" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                            <svg style="width:26px;height:26px;" viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+                                <defs>
+                                    <linearGradient id="shareGrad${post.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#3b82f6"/>
+                                        <stop offset="100%" style="stop-color:#ef4444"/>
+                                    </linearGradient>
+                                </defs>
+                                <path stroke="url(#shareGrad${post.id})" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                            </svg>
+                        </div>
                     </div>
                 </div>
-                <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.8125rem;color:#6b7280;">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#3b82f6" stroke-width="2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-                    </svg>
-                    <span>${formatCount(post.views_count || 0)}</span>
-                </div>
-            </div>
-            
-            ${captionHTML}
-            
-            <div style="position:relative;background:#f3f4f6;">
-                <img data-src="${post.content_urls?.[0]}" class="lazy-image" style="width:100%;min-height:300px;object-fit:cover;background:#e5e7eb;cursor:pointer;" onclick="openLightbox('${post.content_urls?.[0]}', 'image')">
-            </div>
-            
-            ${hashtagsHTML}
-            
-            <div style="padding:1rem;display:flex;align-items:center;gap:1.5rem;">
-                <div onclick="likePost('${post.id}')" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
-                    <svg style="width:26px;height:26px;" viewBox="0 0 24 24" fill="none" stroke-width="2.5">
-                        <defs>
-                            <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#3b82f6"/>
-                                <stop offset="100%" style="stop-color:#ef4444"/>
-                            </linearGradient>
-                        </defs>
-                        <path stroke="url(#heartGrad)" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                    </svg>
-                    <span style="font-weight:700;font-size:0.9375rem;">${formatCount(post.likes_count || 0)}</span>
-                </div>
-                
-                <div onclick="openPostModal('${post.id}')" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
-                    <svg style="width:26px;height:26px;" viewBox="0 0 24 24" fill="none" stroke-width="2.5">
-                        <defs>
-                            <linearGradient id="commentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#3b82f6"/>
-                                <stop offset="100%" style="stop-color:#ef4444"/>
-                            </linearGradient>
-                        </defs>
-                        <path stroke="url(#commentGrad)" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                    </svg>
-                    <span style="font-weight:700;font-size:0.9375rem;">${formatCount(post.comments_count || 0)}</span>
-                </div>
-                
-                <div onclick="shareToMessenger('${post.id}')" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
-                    <svg style="width:26px;height:26px;" viewBox="0 0 24 24" fill="none" stroke-width="2.5">
-                        <defs>
-                            <linearGradient id="shareGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#3b82f6"/>
-                                <stop offset="100%" style="stop-color:#ef4444"/>
-                            </linearGradient>
-                        </defs>
-                        <path stroke="url(#shareGrad)" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-                    </svg>
-                </div>
-            </div>
-        `;
+            `;
+        }).join('');
 
-        container.appendChild(postCard);
-        lazyLoadImage(postCard.querySelector('.lazy-image'));
-    }
-
-    function lazyLoadImage(img) {
-        if (!img) return;
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const image = entry.target;
-                    const src = image.getAttribute('data-src');
-                    if (src) {
-                        image.src = src;
-                        image.style.minHeight = 'auto';
-                    }
-                    observer.unobserve(image);
-                }
-            });
-        }, { rootMargin: '300px' });
-        observer.observe(img);
+        // Show load more button if we have more posts to load
+        if (postsLoaded > 0 && postsLoaded % 5 === 0) {
+            createLoadMoreButton('Load 5 More Posts', loadMorePosts);
+        }
     }
 
     function toggleCaption(postId) {
@@ -5047,14 +5311,16 @@
         const full = document.getElementById(`caption-full-${postId}`);
         const btn = document.getElementById(`read-more-${postId}`);
 
-        if (short.style.display === 'none') {
-            short.style.display = 'inline';
-            full.style.display = 'none';
-            btn.textContent = '...more';
-        } else {
-            short.style.display = 'none';
-            full.style.display = 'inline';
-            btn.textContent = 'less';
+        if (short && full && btn) {
+            if (short.style.display === 'none') {
+                short.style.display = 'inline';
+                full.style.display = 'none';
+                btn.textContent = '...more';
+            } else {
+                short.style.display = 'none';
+                full.style.display = 'inline';
+                btn.textContent = 'less';
+            }
         }
     }
 
@@ -5065,8 +5331,6 @@
 
     function filterByHashtag(tag) {
         activeHashtag = activeHashtag === tag ? null : tag;
-        posts = [];
-        currentPostIndex = 0;
         renderPosts();
     }
 
@@ -5132,8 +5396,12 @@
                     expires_at: new Date(Date.now() + 86400000).toISOString()
                 });
 
-                showToast(`✅ Story published! ${formatCount(initialViews)} views!`);
+                showToast(`✅ Story published!`);
                 closeStoryModal();
+                
+                // Reload stories
+                storiesLoaded = false;
+                loadStories();
             } catch (error) {
                 showToast('Error', 'error');
             }
@@ -5159,8 +5427,12 @@
                     expires_at: new Date(Date.now() + 86400000).toISOString()
                 });
 
-                showToast(`✅ Published! ${formatCount(initialViews)} views!`);
+                showToast(`✅ Published!`);
                 closeStoryModal();
+                
+                // Reload stories
+                storiesLoaded = false;
+                loadStories();
             } catch (error) {
                 showToast('Error', 'error');
             }
@@ -5261,6 +5533,10 @@
             await db.collection('posts').doc(storyId).delete();
             showToast('Deleted!');
             document.querySelector('.lightbox-overlay.active')?.remove();
+            
+            // Reload stories
+            storiesLoaded = false;
+            loadStories();
         } catch (error) {
             showToast('Error', 'error');
         }
@@ -5343,7 +5619,7 @@
         const container = document.getElementById('musicFeed');
 
         if (musicPosts.length === 0) {
-            container.innerHTML = `<div class="empty-state"><h3>No music yet 🎵</h3></div>`;
+            container.innerHTML = `<div class="loading-placeholder"><h3>No music yet 🎵</h3></div>`;
             return;
         }
 
@@ -5404,19 +5680,6 @@
         return audio;
     }
 
-    function selectAudioForPost(musicId, title, artist) {
-        selectedAudio = { musicId, title, artist };
-        document.getElementById('selectedAudioDisplay').style.display = 'block';
-        document.getElementById('selectedAudioName').textContent = `${title} - ${artist}`;
-        navigateTo('create');
-        showToast('Audio selected! 🎵');
-    }
-
-    function removeSelectedAudio() {
-        selectedAudio = null;
-        document.getElementById('selectedAudioDisplay').style.display = 'none';
-    }
-
     function openAI() {
         document.getElementById('aiModal').classList.add('active');
         if (aiMessages.length === 0) {
@@ -5458,30 +5721,18 @@
         renderAIChat();
 
         setTimeout(() => {
-            aiMessages.push({ role: 'ai', text: "I'm X AI! In the full version I can help with images, math, and questions. 🚀" });
+            aiMessages.push({ role: 'ai', text: "I'm X AI! Upgrade to unlock full features 🚀" });
             renderAIChat();
         }, 1000);
     }
 
     function openMarket() {
         document.getElementById('marketModal').classList.add('active');
-        loadMarketOnDemand();
         setMarketMode('view');
     }
 
     function closeMarket() {
         document.getElementById('marketModal').classList.remove('active');
-    }
-
-    function loadMarketOnDemand() {
-        db.collection('market')
-            .orderBy('created_date', 'desc')
-            .limit(20)
-            .get()
-            .then(snapshot => {
-                marketItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                if (marketMode === 'view' || marketMode === 'buy') renderMarketItems();
-            });
     }
 
     function setMarketMode(mode) {
@@ -5499,33 +5750,12 @@
 
     function renderMarketItems() {
         const container = document.getElementById('marketContent');
-        const searchQuery = document.getElementById('marketSearch').value.toLowerCase();
-        let filtered = [...marketItems, ...DEFAULT_MARKET_ITEMS];
-
-        if (marketMode === 'buy') filtered = filtered.filter(item => item.created_by !== currentUser.email);
-        if (searchQuery) {
-            filtered = filtered.filter(item =>
-                (item.name && item.name.toLowerCase().includes(searchQuery)) ||
-                (item.location && item.location.toLowerCase().includes(searchQuery))
-            );
-        }
-
-        if (filtered.length === 0) {
-            container.innerHTML = `<div class="empty-state"><h3>No items 🔍</h3></div>`;
-            return;
-        }
-
-        container.innerHTML = `<div class="market-grid">${filtered.map(item => `
-            <div class="market-item">
-                <img src="${item.image_url}" class="market-item-image" onclick="openLightbox('${item.image_url}', 'image')">
-                <div class="market-item-content">
-                    <div class="market-item-name">${item.name}</div>
-                    <p style="font-size:0.875rem;color:#374151;margin:0.5rem 0;">${item.description || ''}</p>
-                    <div style="font-size:0.875rem;color:#6b7280;">📍 ${item.location}</div>
-                    ${item.whatsapp ? `<a href__="https://wa.me/${item.whatsapp.replace(/[^0-9]/g, '')}" target="_blank" style="display:inline-block;margin-top:0.5rem;padding:0.5rem 1rem;background:#25D366;color:white;border-radius:0.5rem;text-decoration:none;">💬 WhatsApp</a>` : ''}
-                </div>
+        container.innerHTML = `
+            <div class="loading-placeholder">
+                <h3>🛍️ Marketplace</h3>
+                <p>Click "Load Market Items" to browse</p>
             </div>
-        `).join('')}</div>`;
+        `;
     }
 
     function renderSellForm() {
@@ -5620,7 +5850,6 @@
 
     function openReels() {
         document.getElementById('reelsModal').classList.add('active');
-        renderReels();
     }
 
     function closeReels() {
@@ -5654,30 +5883,6 @@
         } catch (error) {
             showToast('Error', 'error');
         }
-    }
-
-    function renderReels() {
-        const container = document.getElementById('reelsContent');
-
-        if (reels.length === 0) {
-            container.innerHTML = `<div class="empty-state" style="color:white;"><h3 style="color:white;">No reels 📹</h3></div>`;
-            return;
-        }
-
-        container.innerHTML = reels.map((reel, index) => {
-            const user = users.find(u => u.email === reel.created_by) || { full_name: 'Creator', profile_picture: '' };
-            const verifyBadge = getVerificationBadge(user);
-
-            return `
-                <div class="reel-item">
-                    <video src="${reel.video_url}" class="reel-video" ${index === 0 ? 'autoplay' : ''} loop playsinline></video>
-                    <div class="reel-overlay">
-                        <div class="reel-author" style="display:flex;align-items:center;">${user.full_name}${verifyBadge}</div>
-                        ${reel.caption ? `<div class="reel-caption">${reel.caption}</div>` : ''}
-                    </div>
-                </div>
-            `;
-        }).join('');
     }
 
     function openAdModal() {
@@ -5766,7 +5971,7 @@
 
     async function openPostModal(postId) {
         try {
-            currentViewPost = posts.find(p => p.id === postId) || DEFAULT_POSTS.find(p => p.id === postId);
+            currentViewPost = allPosts.find(p => p.id === postId);
             if (!currentViewPost) return;
 
             const user = users.find(u => u.email === currentViewPost.created_by) || { full_name: 'User', profile_picture: '' };
@@ -5808,10 +6013,10 @@
             if (commentUnsubscribe) commentUnsubscribe();
 
             commentUnsubscribe = db.collection('posts').doc(postId).collection('comments')
-                .orderBy('created_date', 'asc')
                 .limit(50)
                 .onSnapshot(snapshot => {
                     currentComments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    currentComments.sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
                     renderComments();
                 });
         } catch (error) {}
@@ -5912,7 +6117,7 @@
 
     async function likePost(postId) {
         try {
-            const post = posts.find(p => p.id === postId) || DEFAULT_POSTS.find(p => p.id === postId);
+            const post = allPosts.find(p => p.id === postId);
             if (!post || post.id.startsWith('dp')) return;
 
             const likedBy = post.likedBy || [];
@@ -6029,6 +6234,14 @@
             currentHashtags = [];
             renderPreviews();
             renderHashtags();
+            
+            // Reload feed
+            posts = [];
+            allPosts = [];
+            lastPostDoc = null;
+            postsLoaded = 0;
+            loadInitialPosts();
+            
             navigateTo('feed');
         } catch (error) {
             showToast('Error', 'error');
@@ -6074,6 +6287,13 @@
         try {
             await db.collection('posts').doc(postId).delete();
             showToast('Deleted!');
+            
+            // Reload posts
+            posts = [];
+            allPosts = [];
+            lastPostDoc = null;
+            postsLoaded = 0;
+            loadInitialPosts();
         } catch (error) {
             showToast('Error', 'error');
         }
@@ -6082,7 +6302,8 @@
     function viewProfile(email) {
         const user = users.find(u => u.email === email);
         if (user) {
-            renderProfile(user);
+            profileDataLoaded = false; // Reset to show load button
+            currentViewProfileUser = user;
             navigateTo('profile');
         }
     }
@@ -6117,12 +6338,26 @@
         document.getElementById('profileBio').textContent = user.bio || '';
         document.getElementById('profileBio').style.display = user.bio ? 'block' : 'none';
 
-        const userPosts = posts.filter(p => p.created_by === user.email);
+        const userPosts = allPosts.filter(p => p.created_by === user.email);
         document.getElementById('profilePostCount').textContent = formatCount(userPosts.length);
         document.getElementById('profileViewCount').textContent = formatCount(userPosts.reduce((sum, p) => sum + (p.views_count || 0), 0));
         document.getElementById('profileLikeCount').textContent = formatCount(userPosts.reduce((sum, p) => sum + (p.likes_count || 0), 0));
 
-        document.getElementById('profilePosts').innerHTML = userPosts.length === 0 ? `<div class="empty-state"><h3>No posts</h3></div>` : '';
+        const profilePostsContainer = document.getElementById('profilePosts');
+        if (userPosts.length === 0) {
+            profilePostsContainer.innerHTML = `<div class="empty-state"><h3>No posts</h3></div>`;
+        } else {
+            profilePostsContainer.innerHTML = userPosts.slice(0, 10).map(post => `
+                <div style="margin-bottom:1rem;background:white;border-radius:0.75rem;padding:1rem;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+                    <p style="font-size:0.875rem;margin-bottom:0.5rem;">${post.caption?.substring(0, 80) || ''}</p>
+                    ${post.content_urls?.[0] ? `<img src="${post.content_urls[0]}" style="width:100%;height:150px;object-fit:cover;border-radius:0.5rem;margin-bottom:0.5rem;">` : ''}
+                    <div style="display:flex;gap:1rem;font-size:0.8125rem;color:#6b7280;">
+                        <span>❤️ ${formatCount(post.likes_count || 0)}</span>
+                        <span>👁️ ${formatCount(post.views_count || 0)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
     }
 
     async function handleProfilePictureUpload(e) {
@@ -6137,7 +6372,7 @@
             currentUser.profile_picture = compressed;
             localStorage.setItem('streamx-current-user', JSON.stringify(currentUser));
             updateHeaderUI();
-            renderProfile(currentUser);
+            if (profileDataLoaded) renderProfile(currentUser);
             showToast('✅ Updated!');
         } catch (error) {
             showToast('Error', 'error');
@@ -6161,7 +6396,7 @@
             return `
                 <div class="user-quick-card" onclick="viewProfile('${user.email}')">
                     <img src="${user.profile_picture}" class="user-quick-avatar">
-                    <div class="user-quick-name" style="display:flex;align-items:center;justify-content:center;">${user.full_name.split(' ')[0]}${verifyBadge}</div>
+                    <div class="user-quick-name" style="display:flex;align-items:center;justify-content:center;gap:0.25rem;">${user.full_name.split(' ')[0]}${verifyBadge}</div>
                     <button class="user-quick-chat-btn" onclick="event.stopPropagation();startChatWith('${user.email}')">💬</button>
                 </div>
             `;
@@ -6173,7 +6408,7 @@
                 <div class="user-card" onclick="viewProfile('${user.email}')">
                     <img src="${user.profile_picture}" class="user-card-avatar">
                     <div class="user-card-info">
-                        <div class="user-card-name" style="display:flex;align-items:center;">${user.full_name}${verifyBadge}</div>
+                        <div class="user-card-name" style="display:flex;align-items:center;gap:0.25rem;">${user.full_name}${verifyBadge}</div>
                         <div class="user-card-email">${user.email}</div>
                     </div>
                     <button class="message-icon-btn" onclick="event.stopPropagation();startChatWith('${user.email}')">
@@ -6182,6 +6417,11 @@
                 </div>
             `;
         }).join('');
+
+        // Show load more button
+        if (usersLoaded % 5 === 0) {
+            createLoadMoreButton('Load 5 More Users', loadMoreUsers);
+        }
     }
 
     function startChatWith(email) {
@@ -6222,12 +6462,17 @@
                 <div class="conversation-card" onclick="openConversation('${otherUser.email}')">
                     <img src="${otherUser.profile_picture}" class="conversation-avatar">
                     <div class="conversation-info">
-                        <div class="conversation-name" style="display:flex;align-items:center;">${otherUser.full_name}${verifyBadge}</div>
+                        <div class="conversation-name" style="display:flex;align-items:center;gap:0.25rem;">${otherUser.full_name}${verifyBadge}</div>
                         <div class="conversation-last-message">${conv.lastMessage || 'No messages'}</div>
                     </div>
                 </div>
             `;
         }).join('');
+
+        // Show load more button
+        if (convsLoaded % 5 === 0 && convsLoaded > 0) {
+            createLoadMoreButton('Load 5 More Chats', loadConversations);
+        }
     }
 
     function openConversation(email) {
@@ -6292,7 +6537,6 @@
         }
 
         if (currentGroupChat) {
-            const verifyBadge = getVerificationBadge({ verified: false });
             document.getElementById('messengerAvatar').src = currentGroupChat.group_picture;
             document.getElementById('messengerName').textContent = currentGroupChat.group_name;
             document.getElementById('messengerVerifyBadge').innerHTML = '';
@@ -6300,10 +6544,10 @@
             document.getElementById('blockBtn').style.display = 'none';
 
             messageUnsubscribe = db.collection('conversations').doc(currentGroupChat.id).collection('messages')
-                .orderBy('timestamp', 'asc')
-                .limit(50)
+                .limit(100)
                 .onSnapshot(snapshot => {
                     messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                     renderGroupMessages();
                 });
 
@@ -6332,10 +6576,10 @@
             }
 
             messageUnsubscribe = db.collection('conversations').doc(conversationId).collection('messages')
-                .orderBy('timestamp', 'asc')
-                .limit(50)
+                .limit(100)
                 .onSnapshot(snapshot => {
                     messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                     renderMessages();
                 });
         }
@@ -6390,7 +6634,7 @@
             if (msg.type === 'image') {
                 return `
                     <div class="message-bubble ${isSent ? 'sent' : 'received'}">
-                        <div class="message-sender-name" style="display:flex;align-items:center;">${sender.full_name}${senderBadge}</div>
+                        <div class="message-sender-name" style="display:flex;align-items:center;gap:0.25rem;">${sender.full_name}${senderBadge}</div>
                         <img src="${msg.imageUrl}" class="message-image" onclick="openLightbox('${msg.imageUrl}', 'image')">
                         <div class="message-time">${time}</div>
                     </div>
@@ -6399,7 +6643,7 @@
 
             return `
                 <div class="message-bubble ${isSent ? 'sent' : 'received'}">
-                    <div class="message-sender-name" style="display:flex;align-items:center;">${sender.full_name}${senderBadge}</div>
+                    <div class="message-sender-name" style="display:flex;align-items:center;gap:0.25rem;">${sender.full_name}${senderBadge}</div>
                     <div>${linkify(msg.text)}</div>
                     <div class="message-time">${time}</div>
                 </div>
@@ -6407,13 +6651,6 @@
         }).join('');
 
         container.scrollTop = container.scrollHeight;
-    }
-
-    function closeMessageActions() {
-        if (currentMessageAction) {
-            currentMessageAction.remove();
-            currentMessageAction = null;
-        }
     }
 
     async function sendMessage() {
@@ -6465,9 +6702,8 @@
             } else {
                 const participants = [currentUser.email, currentChatUser.email].sort();
                 const convSnapshot = await db.collection('conversations').where('participants', '==', participants).get();
-                const conversationId = convSnapshot.docs[0].id;
 
-                await db.collection('conversations').doc(conversationId).collection('messages').add({
+                await db.collection('conversations').doc(convSnapshot.docs[0].id).collection('messages').add({
                     imageUrl: compressed,
                     type: 'image',
                     sender: currentUser.email,
@@ -6542,25 +6778,6 @@
         }
     }
 
-    function playVoiceNote(voiceId, voiceUrl) {
-        const audioElement = document.getElementById('voicePlayer') || createVoicePlayer();
-        if (currentAudioPlaying === voiceId) {
-            audioElement.paused ? audioElement.play() : audioElement.pause();
-        } else {
-            audioElement.src = voiceUrl;
-            audioElement.play();
-            currentAudioPlaying = voiceId;
-        }
-    }
-
-    function createVoicePlayer() {
-        const audio = document.createElement('audio');
-        audio.id = 'voicePlayer';
-        audio.style.display = 'none';
-        document.body.appendChild(audio);
-        return audio;
-    }
-
     function renderAdminPanel() {
         const activeAds = ads.filter(a => !a.archived);
 
@@ -6569,19 +6786,18 @@
             <div class="admin-section">
                 <h3>Ads 📢</h3>
                 <button class="admin-btn admin-btn-submit" onclick="openAdModal()">+ Create</button>
-                ${activeAds.length === 0 ? '<p style="text-align:center;color:#6b7280;">No ads</p>' : ''}
+                ${activeAds.length === 0 ? '<p style="text-align:center;color:#6b7280;">No ads</p>' : activeAds.map(ad => `
+                    <div class="admin-post-item">
+                        <img src="${ad.content_urls?.[0]}" class="admin-post-thumbnail">
+                        <div class="admin-post-info">
+                            <div>${ad.company_name}</div>
+                            <div>👁️ ${formatCount(ad.views_count || 0)}</div>
+                        </div>
+                        <button class="admin-action-btn delete" onclick="deleteAd('${ad.id}')">Delete</button>
+                    </div>
+                `).join('')}
             </div>
         `;
-    }
-
-    async function grantVerification(userId, type) {
-        if (!confirm(`Grant ${type} badge?`)) return;
-        try {
-            await db.collection('users').doc(userId).update({ verified: true, verified_type: type });
-            showToast(`✅ ${type} badge granted!`);
-        } catch (error) {
-            showToast('Error', 'error');
-        }
     }
 
     async function deleteAd(adId) {
@@ -6589,6 +6805,10 @@
         try {
             await db.collection('posts').doc(adId).delete();
             showToast('Deleted!');
+            
+            // Reload admin data
+            adminDataLoaded = false;
+            loadAdminData();
         } catch (error) {
             showToast('Error', 'error');
         }
